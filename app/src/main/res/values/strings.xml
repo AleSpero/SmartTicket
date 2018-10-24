@@ -3,4 +3,5 @@
     <string name="subtotal">Subtotal</string>
     <string name="howManyTickets">Hai bisogno di %s buoni pasto</string>
     <string name="additionalCashMsg">Devi aggiungere %s%s</string>
+    <string name="scanBtn">Scan</string>
 </resources>
