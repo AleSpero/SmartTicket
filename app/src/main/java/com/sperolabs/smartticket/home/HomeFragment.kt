@@ -1,4 +1,4 @@
-package com.sperolabs.smartticket.scan
+package com.sperolabs.smartticket.home
 
 import android.app.Fragment
 import android.os.Bundle
@@ -10,7 +10,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.sperolabs.smartticket.R
 import com.sperolabs.smartticket.home.HomeContract
 
-class ScanFragment : Fragment(), HomeContract.View {
+class HomeFragment : Fragment(), HomeContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

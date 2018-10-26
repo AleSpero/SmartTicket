@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:title="@string/app_name"
+        android:id="@+id/topBar"
+        app:titleTextColor="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/shoppingListLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:textSize="22sp"
+        android:textColor="@android:color/black"
+        android:text="@string/my_shopping_list"
+        android:layout_below="@id/topBar"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="10dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/shoppingListLbl"
+        tools:listitem="@layout/shopping_item"/>
+
+
+
+
+
+</RelativeLayout>
