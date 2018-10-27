@@ -10,7 +10,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.sperolabs.smartticket.R
 import com.sperolabs.smartticket.home.HomeContract
 
-class ScanFragment : Fragment(), HomeContract.View {
+class ScanFragment : Fragment(), ScanContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,5 +24,6 @@ class ScanFragment : Fragment(), HomeContract.View {
 
         return view
     }
+
 
 }

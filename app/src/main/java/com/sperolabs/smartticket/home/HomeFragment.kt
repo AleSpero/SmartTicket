@@ -17,12 +17,22 @@ class HomeFragment : Fragment(), HomeContract.View {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_scan, container, false)
-        val bottomAppBar = view.findViewById<BottomAppBar>(R.id.bar)
-
-        (activity as AppCompatActivity).setSupportActionBar(bottomAppBar)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         return view
+    }
+
+
+    override fun refreshList() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun refreshBottomAppBar() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun swapToScan() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }
