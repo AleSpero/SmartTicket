@@ -2,6 +2,7 @@ package com.sperolabs.smartticket
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sperolabs.smartticket.home.HomeFragment
@@ -12,6 +13,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var bottomAppBar : BottomAppBar
     lateinit var barFab : FloatingActionButton
     private var currentFabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+
+    var addVisibilityChanged :FloatingActionButton.OnVisibilityChangedListener? = null
+
+    companion object {
+        val HOME_FRAGMENT = 0
+        val SCAN_FRAGMENT = 1
+
+        var currentFragment = HOME_FRAGMENT
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,49 +38,62 @@ class MainActivity : AppCompatActivity() {
         transaction.add(R.id.fragment_container, HomeFragment())
         transaction.commit()
 
-        val addVisibilityChanged: FloatingActionButton.OnVisibilityChangedListener = object : FloatingActionButton.OnVisibilityChangedListener() {
-            override fun onShown(fab: FloatingActionButton?) {
-                super.onShown(fab)
-            }
+         addVisibilityChanged = object : FloatingActionButton.OnVisibilityChangedListener() {
             override fun onHidden(fab: FloatingActionButton?) {
                 super.onHidden(fab)
                 bottomAppBar.toggleFabAlignment()
                 // ? approfondisci
                 bottomAppBar.replaceMenu(
-                        if(currentFabAlignmentMode == BottomAppBar.FAB_ALIGNMENT_MODE_CENTER) R.menu.home_menu
+                        if(currentFragment == HOME_FRAGMENT) R.menu.home_menu
                         else R.menu.scan_menu
                 )
                 fab?.setImageDrawable(
-                        if(currentFabAlignmentMode == BottomAppBar.FAB_ALIGNMENT_MODE_CENTER) getDrawable(R.drawable.ic_add)
+                        if(currentFragment == HOME_FRAGMENT) getDrawable(R.drawable.ic_add)
                         else getDrawable(R.drawable.ic_search)
                 )
                 fab?.show()
             }
         }
 
-
-        barFab.setOnClickListener {
-            swapToScan(addVisibilityChanged)
-        }
-
+            configBottomAppBar()
     }
 
-    fun swapToScan(listener : FloatingActionButton.OnVisibilityChangedListener){
-
-
-        //Change bottomappbar behaviour
-        barFab.hide(listener)
+    fun swapToScan(){
+        //change bottomappbar behaviour
+        configBottomAppBar()
 
         //Inflate fragment scan
         val transaction = fragmentManager.beginTransaction()
         transaction.add(R.id.fragment_container, ScanFragment())
+                transaction.addToBackStack( "scan" )
         transaction.commit()
 
     }
 
     private fun BottomAppBar.toggleFabAlignment() {
-        fabAlignmentMode = currentFabAlignmentMode.xor(1)
-        currentFabAlignmentMode = fabAlignmentMode
+        fabAlignmentMode = currentFragment
+    }
+
+    fun swapToOcr(){
+
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        configBottomAppBar()
+    }
+
+    fun configBottomAppBar(){
+        barFab.hide(addVisibilityChanged)
+        barFab.setOnClickListener {
+            if (currentFragment == HOME_FRAGMENT) swapToScan()
+            else swapToOcr()
+        }
+
+    }
+
+    override fun onAttachFragment(fragment: Fragment?) {
+        super.onAttachFragment(fragment)
     }
 
 

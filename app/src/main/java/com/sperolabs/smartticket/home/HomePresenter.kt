@@ -1,6 +1,5 @@
 package com.sperolabs.smartticket.home
 
-import com.sperolabs.smartticket.home.HomeContract
 
 class HomePresenter :  HomeContract.View {
     override fun refreshList() {
