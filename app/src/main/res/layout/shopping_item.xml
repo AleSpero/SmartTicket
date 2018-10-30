@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:id="@+id/city"
+                android:id="@+id/itemName"
                 android:textSize="18sp"
                  />
 
@@ -35,10 +35,10 @@
                 android:textColor="@android:color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/country"
+                android:id="@+id/totalCost"
                 android:textSize="14sp"
-                android:layout_below="@id/city"
-                android:layout_alignStart="@id/city" />
+                android:layout_below="@id/itemName"
+                android:layout_alignStart="@id/itemName" />
 
         </RelativeLayout>
 
@@ -55,7 +55,7 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/ora"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingRight="20dp"
@@ -64,7 +64,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/data"
+                android:id="@+id/nTickets"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp"

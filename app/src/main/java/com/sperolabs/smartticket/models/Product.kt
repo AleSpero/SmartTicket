@@ -11,8 +11,8 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(foreignKeys = [ForeignKey(entity = ShoppingItem::class,
-        parentColumns = arrayOf("shopping_list_id"),
-        childColumns = arrayOf("id"),
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("shopping_list_id"),
         onDelete = ForeignKey.CASCADE)])
 
 class Product(@PrimaryKey val id :Int,
