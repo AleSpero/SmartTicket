@@ -28,9 +28,36 @@
         android:padding="10dp"
         android:id="@+id/shoppingList"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_below="@id/shoppingListLbl"
         tools:listitem="@layout/shopping_item"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:alpha="0.4"
+            android:src="@mipmap/checklist_test1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="19sp"
+            android:text="Oops! Non ci sono elementi qui."
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
 
 
 
