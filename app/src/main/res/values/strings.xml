@@ -6,4 +6,5 @@
     <string name="scanBtn">Scan</string>
     <string name="my_shopping_list">La Mia Spesa</string>
     <string name="action_search">Search</string>
+    <string name="history">History</string>
 </resources>

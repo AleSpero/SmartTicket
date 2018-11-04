@@ -1,11 +1,13 @@
 package com.sperolabs.smartticket
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sperolabs.smartticket.home.HomeFragment
+import com.sperolabs.smartticket.ocr.OcrActivity
 import com.sperolabs.smartticket.scan.ScanFragment
 
 class MainActivity : AppCompatActivity() {
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun swapToOcr(){
-
+        startActivity(Intent(this, OcrActivity::class.java))
     }
 
     override fun onBackPressed() {
