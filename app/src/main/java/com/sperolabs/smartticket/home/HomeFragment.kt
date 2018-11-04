@@ -8,19 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.sperolabs.smartticket.MainActivity
 import com.sperolabs.smartticket.R
 import com.sperolabs.smartticket.adapters.ShoppingAdapter
+import com.sperolabs.smartticket.helpers.CustomRVHItemTouchHelperCallback
 import com.sperolabs.smartticket.helpers.DatabaseDataSource
 import com.sperolabs.smartticket.home.HomeContract
+import github.nisrulz.recyclerviewhelper.RVHItemClickListener
+import github.nisrulz.recyclerviewhelper.RVHItemDividerDecoration
 
 class HomeFragment : Fragment(), HomeContract.View {
 
     lateinit var shoppingList: RecyclerView
     lateinit var emptyView: LinearLayout
+    lateinit var shoppingAdapter: ShoppingAdapter
 
     override fun onAttach(context: Context?) {
         MainActivity.currentFragment = MainActivity.HOME_FRAGMENT
@@ -37,6 +42,31 @@ class HomeFragment : Fragment(), HomeContract.View {
         shoppingList.hasFixedSize()
         shoppingList.layoutManager = LinearLayoutManager(activity)
 
+        refreshList()
+
+        val callback : ItemTouchHelper.Callback = CustomRVHItemTouchHelperCallback(shoppingAdapter,
+                false,
+                false,
+                true,
+                activity)
+
+        val helper = ItemTouchHelper(callback)
+        helper.attachToRecyclerView(shoppingList)
+
+        //Aggiungo divider
+        //shoppingList.addItemDecoration(RVHItemDividerDecoration(activity, LinearLayoutManager.VERTICAL))
+
+        shoppingList.addOnItemTouchListener(RVHItemClickListener(activity,
+                RVHItemClickListener.OnItemClickListener { view, position ->
+                    //TODO
+                    //swapToCityDetails(cityAdapter.getItemAtPosition(position))
+                }
+        ))
+
+        //TODO bar hide listener on scroll
+        /*
+        shoppingList.addOnScrollListener(FabScrollListener())*/
+
         return view
     }
 
@@ -48,17 +78,15 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     override fun refreshList() {
 
-        //TODO query
         val items = DatabaseDataSource.getStDbInstance()
                 .shoppingItemDao()
                 .getAllItems()
 
-
         shoppingList.visibility = if (items.isNotEmpty()) View.VISIBLE else View.GONE
         emptyView.visibility = if (items.isEmpty()) View.VISIBLE else View.GONE
 
-        //TODO setAdapter
-        shoppingList.adapter = ShoppingAdapter(items)
+        shoppingAdapter = ShoppingAdapter(items)
+        shoppingList.adapter = shoppingAdapter
 
 
     }

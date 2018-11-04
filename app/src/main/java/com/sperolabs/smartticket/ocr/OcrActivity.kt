@@ -21,7 +21,7 @@ class OcrActivity : Activity() {
     private lateinit var fotoApparat: Fotoapparat
     private lateinit var cameraView: CameraView
 
-    private var isFrontCamera = false
+    private var isBackCamera = false
     private var flashEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,9 +40,9 @@ class OcrActivity : Activity() {
 
         cameraSide.setOnClickListener {
             fotoApparat.switchTo(
-                    if(fotoApparat.isAvailable { LensPosition.Back } and isFrontCamera) back() else front(),
+                    if(fotoApparat.isAvailable { LensPosition.Back } and isBackCamera) back() else front(),
                     CameraConfiguration.default())
-            isFrontCamera = isFrontCamera.not()
+            isBackCamera = isBackCamera.not()
         }
 
         flashButton.setOnClickListener {
@@ -50,7 +50,7 @@ class OcrActivity : Activity() {
             flashEnabled = flashEnabled.not()
 
             val flashType = if(flashEnabled) torch() else off()
-            val flashIcon = if(flashEnabled) R.drawable.ic_flash_on else R.drawable.ic_flash_off
+            val flashIcon = if(isBackCamera and flashEnabled) R.drawable.ic_flash_on else R.drawable.ic_flash_off
 
             flashButton.setImageDrawable(getDrawable(flashIcon))
             fotoApparat.updateConfiguration(UpdateConfiguration(

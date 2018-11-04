@@ -10,13 +10,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sperolabs.smartticket.R
 import com.sperolabs.smartticket.models.ShoppingItem
+import github.nisrulz.recyclerviewhelper.RVHAdapter
 import java.util.*
 
 /**
  * Created by alessandros on 27/10/2018.
  * @author Alessandro Sperotti
  */
-class ShoppingAdapter(var itemList : List<ShoppingItem>) : RecyclerView.Adapter<ShoppingAdapter.ItemViewHolder>() {
+class ShoppingAdapter(var itemList : List<ShoppingItem>) : RecyclerView.Adapter<ShoppingAdapter.ItemViewHolder>(), RVHAdapter {
 
     //TODO swipe to dismiss (world clockkk)
 
@@ -31,6 +32,14 @@ class ShoppingAdapter(var itemList : List<ShoppingItem>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
        holder.bindItem(itemList[position])
+    }
+
+    override fun onItemDismiss(position: Int, direction: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
