@@ -59,7 +59,6 @@ class HomeFragment : Fragment(), HomeContract.View {
         shoppingList.addOnItemTouchListener(RVHItemClickListener(activity,
                 RVHItemClickListener.OnItemClickListener { view, position ->
                     //TODO
-                    //swapToCityDetails(cityAdapter.getItemAtPosition(position))
                 }
         ))
 
