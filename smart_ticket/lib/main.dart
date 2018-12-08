@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(new SmartTicketApp());
 
-class MyApp extends StatelessWidget {
+class SmartTicketApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    var colorPrimary = Colors.orange[700];
+    var colorPrimaryDark = Colors.orange[800];
+    var colorAccent = Colors.orange[900];
+    var greyBkg = Colors.grey[50];
+    
     return new MaterialApp(
       title: 'Flutter Demo',
       theme: new ThemeData(
