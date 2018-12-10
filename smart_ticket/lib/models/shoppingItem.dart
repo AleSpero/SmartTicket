@@ -12,6 +12,9 @@ class ShoppingItem{
   double get cost => _cost;
   String get name => _name;
 
+
+  ShoppingItem(this._id, this._date, this._name, this._cost, this._ticketsNum);
+
   Map<String, dynamic> toMap(){
     return {
       'id' : _id,
@@ -20,6 +23,14 @@ class ShoppingItem{
       'cost' : _cost,
       'ticketsNum' : _ticketsNum
     };
+  }
+
+   static ShoppingItem fromMap(Map<String, dynamic> map){
+    return new ShoppingItem(map['id'],
+        map['id'],
+        map['date'],
+        map['cost'],
+        map['ticketsNum']);
   }
 
 

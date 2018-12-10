@@ -15,6 +15,13 @@ class Product{
 
   //Metodi che servono per sqflite
 
+  static Product fromMap(Map<String, dynamic> map){
+    return new Product(map['id'],
+        map['cost'],
+        map['name'],
+        map['shoppingItemId']);
+  }
+
   Map<String, dynamic> toMap(){
     return {
       'id' : _id,
