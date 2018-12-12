@@ -32,7 +32,6 @@ import android.hardware.camera2.CameraManager
 import android.os.Build
 import android.util.SparseIntArray
 import android.view.Surface
-import androidx.annotation.RequiresApi
 import java.io.ByteArrayOutputStream
 
 
@@ -182,7 +181,6 @@ class OcrActivity : Activity() {
      * Get the angle by which an image must be rotated given the device's current
      * orientation.
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Throws(CameraAccessException::class)
     private fun getRotationCompensation(cameraId: Int, activity: Activity, context: Context): Int {
         // Get the device's current rotation relative to its "native" orientation.

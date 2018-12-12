@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:smart_ticket/helpers/StDbHelper.dart';
+import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
+import 'package:smart_ticket/widgets/shoppingitemwidget.dart';
 
 void main() => runApp(new SmartTicketApp());
 
@@ -11,25 +14,37 @@ class SmartTicketApp extends StatelessWidget {
   static var colorAccent = Colors.orange[900];
   static var greyBkg = Colors.grey[50];
 
+  static var appTitle = "Smart Ticket";
+
+  static var primarySwatch = MaterialColor(0xFFF57C00, // colorPrimary.value,
+      {
+        50: colorPrimary,
+        100: colorPrimary,
+        200: colorPrimary,
+        300: colorPrimary,
+        400: colorPrimary,
+        500: colorPrimary,
+        600: colorPrimaryDark,
+        700: colorAccent,
+        800: colorAccent,
+        900: colorAccent
+      });
+
+  final ThemeData androidThemeData = ThemeData(
+      primarySwatch: primarySwatch,
+      iconTheme: IconThemeData(color: Colors.white),
+      primaryTextTheme: TextTheme(title: TextStyle(color: Colors.white)));
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'Smart Ticket',
-      theme: new ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or press Run > Flutter Hot Reload in IntelliJ). Notice that the
-        // counter didn't reset back to zero; the application is not restarted.
-        primarySwatch: colorPrimary,
-      ),
+      title: appTitle,
+      theme: //TODO theme for ios
+          androidThemeData,
       initialRoute: '/',
       routes: {
         //che è sto context tra parentesi?
-        '/': (context) => HomeScreen(),
+        '/': (context) => HomeScreen(title: appTitle),
         '/scan': (context) => ScanScreen()
       },
     );
@@ -37,7 +52,7 @@ class SmartTicketApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.title}) : super(key: key);
+  HomeScreen({Key key, @required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -82,40 +97,29 @@ class _HomeScreenState extends State<HomeScreen> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: new Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: new Container(
+        padding: EdgeInsets.all(20.0),
+
         child: new Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug paint" (press "p" in the console where you ran
-          // "flutter run", or select "Toggle Debug Paint" from the Flutter tool
-          // window in IntelliJ) to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
+            new Container(
+              child: new Text("La mia spesa",
+                  style: new TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold)),
+              margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 50.0),
             ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            _buildItemList()
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
-          child: Icon(Icons.add),
-          onPressed: null),
+          child: Icon(Icons.add, color: Colors.white),
+          onPressed: _incrementCounter),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
@@ -123,10 +127,47 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           //TODO?
           children: <Widget>[
-            IconButton(icon: Icon(Icons.history), onPressed: null)
+            IconButton(
+                icon: Icon(Icons.history, color: Colors.white), onPressed: null)
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  FutureBuilder _buildItemList(){
+    return FutureBuilder(
+      future: StDbHelper().getAllItems(),
+      builder: (context, snapshot) {
+        if(snapshot.hasData){
+          return createListView(context, snapshot);
+        }
+        else return Expanded(child: Center(child: CircularProgressIndicator()));
+      },
+    );
+  }
+
+  Widget createListView(BuildContext context, AsyncSnapshot snapshot){
+    //TODO se lista vuota ritorna coso carino else ritorna lista
+      final itemsList = snapshot.data as List<ShoppingItem>;
+    if(itemsList.isEmpty){
+      return new Center(
+        child: Column(
+          children: <Widget>[
+             Text("TODO inserisci immagine carina"), //todo lo sai
+             Text("Oops! Non ci sono elementi qui.",
+            style: TextStyle(fontSize: 16.0),)
+          ],
+        ),
+      );
+    }
+    else {
+      return ListView.builder(
+        itemCount: itemsList.length,
+        itemBuilder: (context, item) {
+          return ShoppingItemWidget(itemsList[item]);
+        });
+    }
+  }
+
 }
