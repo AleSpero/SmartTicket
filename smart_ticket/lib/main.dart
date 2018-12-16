@@ -1,8 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
+import 'package:smart_ticket/widgets/insertdialog.dart';
 import 'package:smart_ticket/widgets/shoppingitemwidget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(new SmartTicketApp());
 
@@ -15,6 +19,12 @@ class SmartTicketApp extends StatelessWidget {
   static var greyBkg = Colors.grey[50];
 
   static var appTitle = "Smart Ticket";
+
+  static const String ROUTE_HOME = "/";
+  static const String ROUTE_SCAN = "/scan";
+  static const String ST_CHANNEL = "smartTicket";
+  static const String OCR_METHOD = "startOcr";
+
 
   static var primarySwatch = MaterialColor(0xFFF57C00, // colorPrimary.value,
       {
@@ -35,6 +45,10 @@ class SmartTicketApp extends StatelessWidget {
       iconTheme: IconThemeData(color: Colors.white),
       primaryTextTheme: TextTheme(title: TextStyle(color: Colors.white)));
 
+  final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+
+  static const plaformChannel = const MethodChannel(ST_CHANNEL);
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -44,8 +58,8 @@ class SmartTicketApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //che è sto context tra parentesi?
-        '/': (context) => HomeScreen(title: appTitle),
-        '/scan': (context) => ScanScreen()
+        ROUTE_HOME: (context) => HomeScreen(title: appTitle),
+        ROUTE_SCAN: (context) => ScanScreen(title : appTitle)
       },
     );
   }
@@ -70,18 +84,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: new Container(
         padding: EdgeInsets.all(20.0),
-
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -119,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
           child: Icon(Icons.add, color: Colors.white),
-          onPressed: _incrementCounter),
+          onPressed: addNewItem),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
@@ -135,39 +137,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  FutureBuilder _buildItemList(){
+  FutureBuilder _buildItemList() {
+    debugPrint("Fetching ShoppingItems");
     return FutureBuilder(
       future: StDbHelper().getAllItems(),
       builder: (context, snapshot) {
-        if(snapshot.hasData){
+        if (snapshot.hasData) {
           return createListView(context, snapshot);
-        }
-        else return Expanded(child: Center(child: CircularProgressIndicator()));
+        } else
+          return Expanded(child: Center(child: CircularProgressIndicator()));
       },
     );
   }
 
-  Widget createListView(BuildContext context, AsyncSnapshot snapshot){
-    //TODO se lista vuota ritorna coso carino else ritorna lista
-      final itemsList = snapshot.data as List<ShoppingItem>;
-    if(itemsList.isEmpty){
-      return new Center(
+  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
+    final itemsList = snapshot.data as List<ShoppingItem>;
+    if (itemsList.isEmpty) {
+      return Expanded(
+          child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-             Text("TODO inserisci immagine carina"), //todo lo sai
-             Text("Oops! Non ci sono elementi qui.",
-            style: TextStyle(fontSize: 16.0),)
+           new Image.asset('assets/no_items.png',
+           width: 150,
+           height: 150),
+            Container(
+                child: Text(
+              "Oops! Non ci sono elementi qui.",
+              style: TextStyle(fontSize: 16.0)
+            ),
+            padding: EdgeInsets.all(15))
           ],
         ),
-      );
-    }
-    else {
+      ));
+    } else {
       return ListView.builder(
-        itemCount: itemsList.length,
-        itemBuilder: (context, item) {
-          return ShoppingItemWidget(itemsList[item]);
-        });
+          itemCount: itemsList.length,
+          itemBuilder: (context, item) {
+            return ShoppingItemWidget(itemsList[item]);
+          });
     }
   }
 
+  void addNewItem(){
+    //TODO mostrare dialog che chiede il nome, generare oggetto e aggiungere a db, e pusha a scan
+    //TODO crea custom widget dialog? per inserire i dati
+    showDialog(context: context,
+    builder: (context){
+      //Todo return insertdialog
+      return InsertDialog(SmartTicketApp.ROUTE_SCAN);
+    });
+  }
 }

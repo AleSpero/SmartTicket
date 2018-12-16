@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:smart_ticket/models/product.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:sqflite/sqflite.dart';
@@ -38,10 +39,10 @@ class StDbHelper {
   StDbHelper.internal();
 
   initDb() async {
-   /* io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
     //TODO assets?
-    String path = join(documentsDirectory.path, "SmartTicketDb.db");*/
-    var theDb = await openDatabase("/"/*path*/, version: 1, onCreate: _onCreate);
+    String path = join(documentsDirectory.path, "SmartTicketDb.db");
+    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
     return theDb;
   }
 
