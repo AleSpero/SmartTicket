@@ -60,10 +60,18 @@ class StDbHelper {
     await dbClient.insert(TABLE_PRODUCT, product.toMap());
   }
 
+  void removeProduct(Product product){
+    //TODO implement me
+  }
+
   void addShoppingItem(ShoppingItem item) async {
     //TODO
     var dbClient = await db;
     await dbClient.insert(TABLE_SHOPPING_ITEM, item.toMap());
+  }
+
+  void removeShoppingItem(ShoppingItem item){
+    //TODO implement me
   }
 
   Future<List<ShoppingItem>> getAllItems() async {

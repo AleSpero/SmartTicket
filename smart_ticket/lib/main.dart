@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 20.0,
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
-              margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 50.0),
+              margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 50.0, bottom: 15),
             ),
             new Container(child: _buildItemList())
           ],

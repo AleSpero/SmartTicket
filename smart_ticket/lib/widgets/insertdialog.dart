@@ -6,6 +6,8 @@ class InsertDialog extends Dialog{
 
   final String nextRoute;
 
+  String itemName; //TODO poi cisarà da gestire l'intero form, sfanculando questa meccanica
+
   InsertDialog(this.nextRoute);
 
   @override
@@ -17,6 +19,9 @@ class InsertDialog extends Dialog{
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
+            onChanged: (newText) {
+              itemName = newText;
+           },
             decoration: InputDecoration(
               labelText: "Nome",
             ),
@@ -27,7 +32,7 @@ class InsertDialog extends Dialog{
         FlatButton(child: Text("Crea"),
           onPressed: () {
           //TODO insert DB
-            StDbHelper().addShoppingItem(ShoppingItem.generate("Prendi nome da txtfield"));
+            StDbHelper().addShoppingItem(ShoppingItem.generate(itemName));
 
             Navigator.of(context).pop();
             Navigator.of(context).pushNamed(nextRoute);
