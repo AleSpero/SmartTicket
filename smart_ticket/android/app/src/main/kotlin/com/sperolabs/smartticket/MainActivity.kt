@@ -29,7 +29,5 @@ class MainActivity : FlutterActivity() {
       }
     }
 
-    //Init firebase
-    FirebaseApp.initializeApp(this)
   }
 }

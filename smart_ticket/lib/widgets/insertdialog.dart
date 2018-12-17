@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smart_ticket/helpers/StDbHelper.dart';
+import 'package:smart_ticket/models/shoppingItem.dart';
 
 class InsertDialog extends Dialog{
 
@@ -24,6 +26,9 @@ class InsertDialog extends Dialog{
       actions: <Widget>[
         FlatButton(child: Text("Crea"),
           onPressed: () {
+          //TODO insert DB
+            StDbHelper().addShoppingItem(ShoppingItem.generate("Prendi nome da txtfield"));
+
             Navigator.of(context).pop();
             Navigator.of(context).pushNamed(nextRoute);
           },)

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ticket/main.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 class ScanScreen extends StatefulWidget {
   ScanScreen({Key key, this.title}) : super(key: key);
@@ -36,15 +37,18 @@ class _HomeScreenState extends State<ScanScreen> {
         title: new Text(widget.title),
       ),
       body: Container(
-              child: Center(
-                  child: Column(
+          child: Center(
+              child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
             "23,40€",
             style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
           ),
-          Text("Hai usato x Ticket", style: TextStyle(fontSize: 18),)
+          Text(
+            "Hai usato x Ticket",
+            style: TextStyle(fontSize: 18),
+          )
           //TOdo fai fontstyle per le varie scritte
         ],
       ))),
@@ -68,12 +72,22 @@ class _HomeScreenState extends State<ScanScreen> {
     );
   }
 
-  void scanItem(){
+  void scanItem() async {
     try {
+      //Check permission!
+      var hasPermission =
+          await SimplePermissions.checkPermission(Permission.Camera);
+
+      if (!hasPermission) {
+        //Request It
+        var permissionStatus =
+            await SimplePermissions.requestPermission(Permission.Camera);
+        debugPrint(permissionStatus.toString());
+      }
+
       SmartTicketApp.plaformChannel.invokeMethod(SmartTicketApp.OCR_METHOD);
-    } catch (PlatformException){
+    } catch (PlatformException) {
       //TODO error
     }
   }
-
 }

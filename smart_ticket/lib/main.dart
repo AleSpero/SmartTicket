@@ -6,7 +6,6 @@ import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
 import 'package:smart_ticket/widgets/insertdialog.dart';
 import 'package:smart_ticket/widgets/shoppingitemwidget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() => runApp(new SmartTicketApp());
 
@@ -24,7 +23,6 @@ class SmartTicketApp extends StatelessWidget {
   static const String ROUTE_SCAN = "/scan";
   static const String ST_CHANNEL = "smartTicket";
   static const String OCR_METHOD = "startOcr";
-
 
   static var primarySwatch = MaterialColor(0xFFF57C00, // colorPrimary.value,
       {
@@ -59,7 +57,7 @@ class SmartTicketApp extends StatelessWidget {
       routes: {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(title: appTitle),
-        ROUTE_SCAN: (context) => ScanScreen(title : appTitle)
+        ROUTE_SCAN: (context) => ScanScreen(title: appTitle)
       },
     );
   }
@@ -84,8 +82,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -113,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.bold)),
               margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 50.0),
             ),
-            _buildItemList()
+            new Container(child: _buildItemList())
           ],
         ),
       ),
@@ -158,34 +154,34 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-           new Image.asset('assets/no_items.png',
-           width: 150,
-           height: 150),
+            new Image.asset('assets/no_items.png', width: 150, height: 150),
             Container(
-                child: Text(
-              "Oops! Non ci sono elementi qui.",
-              style: TextStyle(fontSize: 16.0)
-            ),
-            padding: EdgeInsets.all(15))
+                child: Text("Oops! Non ci sono elementi qui.",
+                    style: TextStyle(fontSize: 16.0)),
+                padding: EdgeInsets.all(15))
           ],
         ),
       ));
     } else {
-      return ListView.builder(
-          itemCount: itemsList.length,
-          itemBuilder: (context, item) {
-            return ShoppingItemWidget(itemsList[item]);
-          });
+      return Expanded(
+          child: Center(
+        child: ListView.builder(
+            itemCount: itemsList.length,
+            itemBuilder: (context, item) {
+              return ShoppingItemWidget(itemsList[item]);
+            }),
+      ));
     }
   }
 
-  void addNewItem(){
+  void addNewItem() {
     //TODO mostrare dialog che chiede il nome, generare oggetto e aggiungere a db, e pusha a scan
     //TODO crea custom widget dialog? per inserire i dati
-    showDialog(context: context,
-    builder: (context){
-      //Todo return insertdialog
-      return InsertDialog(SmartTicketApp.ROUTE_SCAN);
-    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          //Todo return insertdialog
+          return InsertDialog(SmartTicketApp.ROUTE_SCAN);
+        });
   }
 }
