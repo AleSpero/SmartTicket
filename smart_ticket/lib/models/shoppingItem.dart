@@ -7,7 +7,7 @@ class ShoppingItem {
   double _cost;
   int _ticketsNum;
 
-  List<Product> products;
+  List<Product> products = new List<Product>();
 
   int get id => _id;
 
@@ -15,14 +15,17 @@ class ShoppingItem {
 
   int get ticketsNum => _ticketsNum;
 
-  double get cost => _cost;
+  double get cost => products.length > 0 ?
+    products
+      .map((product) => product.cost)
+      .reduce((current, next) => current + next) : 0;
+
 
   String get name => _name;
 
   ShoppingItem(this._id, this._date, this._name, this._ticketsNum);
 
   ShoppingItem.generate(String name) {
-    //TODO sistema, forse l'id non deve esserci ( o deve auto incementarsi)
     this._date = '${DateTime.now().millisecondsSinceEpoch}';
     this._cost = 0;
     this._name = name;

@@ -26,6 +26,8 @@ class StDbHelper {
       "FOREIGN KEY('shopping_list_id') REFERENCES 'shopping_item'('id')"
       ");";
 
+  static const String _GET_PRODUCTS_FROM_ID = "SELECT * from product where id = ?";
+
   static final StDbHelper _instance = new StDbHelper.internal();
   factory StDbHelper() => _instance;
   static Database _db;
@@ -60,8 +62,10 @@ class StDbHelper {
     await dbClient.insert(TABLE_PRODUCT, product.toMap());
   }
 
-  void removeProduct(Product product){
+  Future<int> removeProduct(Product product) async {
     //TODO implement me
+    var dbClient = await db;
+    return await dbClient.delete(TABLE_PRODUCT, where: "id = ?", whereArgs: [product.id]);
   }
 
   void addShoppingItem(ShoppingItem item) async {
@@ -70,9 +74,9 @@ class StDbHelper {
     await dbClient.insert(TABLE_SHOPPING_ITEM, item.toMap());
   }
 
-  void removeShoppingItem(ShoppingItem item){
-    //TODO implement me
-  }
+  Future<int> removeShoppingItem(ShoppingItem item) async {
+    var dbClient = await db;
+    return await dbClient.delete(TABLE_SHOPPING_ITEM, where: "id = ?", whereArgs: [item.id]);  }
 
   Future<List<ShoppingItem>> getAllItems() async {
     var dbClient = await db;
@@ -84,6 +88,20 @@ class StDbHelper {
     }
 
     return result;
+  }
+
+  Future<List<Product>> getProductsById(int shoppingItemId) async {
+    var dbClient = await db;
+    var tempResult = await dbClient.rawQuery(_GET_PRODUCTS_FROM_ID);
+
+    var result = List<Product>();
+
+    for(Map map in tempResult){
+      result.add(Product.fromMap(map));
+    }
+
+    return result;
+
   }
 
   /*Future<int> saveUser(User user) async {

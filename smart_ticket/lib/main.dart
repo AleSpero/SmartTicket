@@ -82,6 +82,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var itemsList;
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -107,7 +109,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontSize: 20.0,
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
-              margin: EdgeInsets.only(top: 10.0, left: 10.0, right: 50.0, bottom: 15),
+              margin: EdgeInsets.only(
+                  top: 10.0, left: 10.0, right: 50.0, bottom: 15),
             ),
             new Container(child: _buildItemList())
           ],
@@ -147,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    final itemsList = snapshot.data as List<ShoppingItem>;
+    itemsList = snapshot.data as List<ShoppingItem>;
     if (itemsList.isEmpty) {
       return Expanded(
           child: Center(
@@ -168,7 +171,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.builder(
             itemCount: itemsList.length,
             itemBuilder: (context, item) {
-              return ShoppingItemWidget(itemsList[item]);
+              return Dismissible(
+                  key: Key('${item.hashCode}'), //TODO valuta se va o no
+
+                  onDismissed: (direction) {
+                    setState(() => removeItem);
+                  },
+                  child: ShoppingItemWidget(itemsList[item]));
             }),
       ));
     }
@@ -183,5 +192,11 @@ class _HomeScreenState extends State<HomeScreen> {
           //Todo return insertdialog
           return InsertDialog(SmartTicketApp.ROUTE_SCAN);
         });
+  }
+
+  void removeItem(int id) {
+    var removedItem = (itemsList as List).removeAt(id);
+    StDbHelper().removeShoppingItem(removedItem);
+    //TODO gestisci direction
   }
 }

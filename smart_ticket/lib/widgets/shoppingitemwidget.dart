@@ -18,7 +18,7 @@ class ShoppingItemWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    // TODO: implement swipe to dismiss + dragdrop
     return Card(
       elevation: 6.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
