@@ -1,17 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_ticket/main.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 
 
 class ShoppingItemWidget extends StatelessWidget{
 
   final ShoppingItem item;
-
-  final TextStyle headerText = TextStyle(
-    fontSize: 18,
-        fontWeight: FontWeight.w800,
-    color: Colors.black54
-  );
 
 
   ShoppingItemWidget(this.item);
@@ -20,9 +15,9 @@ class ShoppingItemWidget extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement swipe to dismiss + dragdrop
     return Card(
-      elevation: 6.0,
+      elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-      margin: EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
       child: Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -31,7 +26,7 @@ class ShoppingItemWidget extends StatelessWidget{
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
               Text(item.name,
-              style: headerText),
+              style: SmartTicketApp.headerText),
               Text(_parseData(item.date))
             ],),
             new Divider(color: Colors.grey,),

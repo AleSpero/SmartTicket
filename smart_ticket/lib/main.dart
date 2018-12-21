@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
@@ -43,16 +44,26 @@ class SmartTicketApp extends StatelessWidget {
       iconTheme: IconThemeData(color: Colors.white),
       primaryTextTheme: TextTheme(title: TextStyle(color: Colors.white)));
 
-  final isAndroid = defaultTargetPlatform == TargetPlatform.android;
-
+  static final isAndroid = defaultTargetPlatform == TargetPlatform.android;
   static const plaformChannel = const MethodChannel(ST_CHANNEL);
+
+  static final TextStyle headerText = TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w800,
+      color: Colors.black54
+  );
+
+  static final TextStyle mainCardHeaderText = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+  );
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: appTitle,
       theme: //TODO theme for ios
-          androidThemeData,
+      androidThemeData,
       initialRoute: '/',
       routes: {
         //che è sto context tra parentesi?
@@ -82,7 +93,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var itemsList;
+  List<ShoppingItem> itemsList;
+  List<ShoppingItemWidget> cardList;
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +109,21 @@ class _HomeScreenState extends State<HomeScreen> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
+        centerTitle: !SmartTicketApp.isAndroid,
+        elevation: 0.0,
+        actions: <Widget>[
+          PopupMenuButton(
+          itemBuilder: (context){
+
+          },
+          )
+        ],
       ),
       body: new Container(
-        padding: EdgeInsets.all(20.0),
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            createTopCard(),
             new Container(
               child: new Text("La mia spesa",
                   style: new TextStyle(
@@ -112,7 +133,8 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: EdgeInsets.only(
                   top: 10.0, left: 10.0, right: 50.0, bottom: 15),
             ),
-            new Container(child: _buildItemList())
+            new Container(
+              child: _buildItemList(),)
           ],
         ),
       ),
@@ -154,33 +176,80 @@ class _HomeScreenState extends State<HomeScreen> {
     if (itemsList.isEmpty) {
       return Expanded(
           child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Image.asset('assets/no_items.png', width: 150, height: 150),
-            Container(
-                child: Text("Oops! Non ci sono elementi qui.",
-                    style: TextStyle(fontSize: 16.0)),
-                padding: EdgeInsets.all(15))
-          ],
-        ),
-      ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Image.asset('assets/no_items.png', width: 150, height: 150),
+                Container(
+                    child: Text("Oops! Non ci sono elementi qui.",
+                        style: TextStyle(fontSize: 16.0)),
+                    padding: EdgeInsets.all(15))
+              ],
+            ),
+          ));
     } else {
       return Expanded(
           child: Center(
-        child: ListView.builder(
-            itemCount: itemsList.length,
-            itemBuilder: (context, item) {
-              return Dismissible(
-                  key: Key('${item.hashCode}'), //TODO valuta se va o no
-
-                  onDismissed: (direction) {
-                    setState(() => removeItem);
-                  },
-                  child: ShoppingItemWidget(itemsList[item]));
-            }),
-      ));
+            child: ListView.builder(
+                itemCount: itemsList.length,
+                itemBuilder: (context, index) {
+                  return Dismissible(
+                      key: Key('${index.hashCode}'), //TODO valuta se va o no
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                        setState(() => removeItem(itemsList[index], index));
+                      },
+                      child: ShoppingItemWidget(itemsList[index]));
+                }),
+          ));
     }
+  }
+
+  Widget createTopCard() {
+    return Stack(
+      children: <Widget>[
+        ClipPath(
+          clipper: CustomShapeClipper(),
+          child: Container(
+            height: 150,
+            decoration: BoxDecoration(
+                color: SmartTicketApp.colorPrimary
+            ),
+          ),
+        ),
+        new Card(
+          elevation: 6.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+          child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Ciao, Alessandro!", //TODO nome utente? come faccio?
+                      style: SmartTicketApp.mainCardHeaderText,),
+                  ),
+                  Divider(color: Colors.grey,),
+                 //TODO if has budget set
+                  //return bars and stuff, else
+
+                  InkWell(
+                    child: Text("Non hai ancora aggiunto un budget! \nTocca qui per farlo.",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 12
+                    ),
+                    textAlign: TextAlign.center,),
+                    onTap: () {debugPrint("Implement me!");},
+                  )
+                ],
+              )
+          ),
+        ),
+      ],
+    );
   }
 
   void addNewItem() {
@@ -194,9 +263,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  void removeItem(int id) {
-    var removedItem = (itemsList as List).removeAt(id);
-    StDbHelper().removeShoppingItem(removedItem);
-    //TODO gestisci direction
+  void removeItem(ShoppingItem item, int index) {
+    itemsList.remove(item);
+    StDbHelper().removeShoppingItem(item);
+    //cardList.removeAt(index);
   }
 }
