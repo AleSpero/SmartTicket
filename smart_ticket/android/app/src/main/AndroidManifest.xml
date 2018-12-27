@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name=".SmartTicketApplication"
-        android:label="smart_ticket"
+        android:label="Smart Ticket"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

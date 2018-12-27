@@ -1,9 +1,14 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:smart_ticket/models/product.dart';
 
 class ShoppingItem {
   int _id;
   String _date;
   String _name;
+  String _notes;
+  Color _color;
   double _cost;
   int _ticketsNum;
 
@@ -23,7 +28,13 @@ class ShoppingItem {
 
   String get name => _name;
 
-  ShoppingItem(this._id, this._date, this._name, this._ticketsNum);
+  ShoppingItem(){
+    this._name = "Lista della Spesa"; //TODO lang
+    this._cost = 0;
+    this._ticketsNum = 0;
+    this._color = Colors.blue;
+    this._date = '${DateTime.now().millisecondsSinceEpoch}';
+  }
 
   ShoppingItem.generate(String name) {
     this._date = '${DateTime.now().millisecondsSinceEpoch}';
@@ -33,7 +44,12 @@ class ShoppingItem {
   }
 
   Map<String, dynamic> toMap() {
-    return {'date': _date, 'name': _name, 'ticketsNum': _ticketsNum};
+    return {'date': _date,
+      'name': _name,
+      'ticketsNum': _ticketsNum,
+      'color': _color.value,
+      'notes': _notes
+    };
   }
 
   ShoppingItem.fromMap(Map<String, dynamic> map) {
@@ -41,5 +57,21 @@ class ShoppingItem {
     _date = map['date'];
     _name = map['name'];
     _ticketsNum = map['ticketsNum'];
+    _color = Color(int.parse(map['color'])); //TODO test
+    _notes = map['notes'];
   }
+
+  set name(String value) {
+    _name = value;
+  }
+
+  set color(Color value) {
+    _color = value;
+  }
+
+  set notes(String value) {
+    _notes = value;
+  }
+
+
 }

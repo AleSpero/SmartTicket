@@ -16,6 +16,8 @@ class StDbHelper {
       "'id'	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
       "'name'	TEXT NOT NULL,"
       "'date'	TEXT NOT NULL,"
+      "'notes' TEXT,"
+      "'color' TEXT NOT NULL,"
       "'ticketsNum'	INTEGER"
       ");"
       "CREATE TABLE IF NOT EXISTS 'product' ("
@@ -69,7 +71,6 @@ class StDbHelper {
   }
 
   void addShoppingItem(ShoppingItem item) async {
-    //TODO
     var dbClient = await db;
     await dbClient.insert(TABLE_SHOPPING_ITEM, item.toMap());
   }

@@ -2,31 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
-import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
-import 'package:smart_ticket/models/shoppingItem.dart';
 
-class ScanScreen extends StatefulWidget {
-  ScanScreen({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class AddProduct extends StatefulWidget {
+  AddProduct({Key key, this.title}) : super(key: key);
 
   final String title;
-  ShoppingItem currentItem = ShoppingItem(); //TODO temp
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
 }
 
-class _HomeScreenState extends State<ScanScreen> {
+class _HomeScreenState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -37,8 +25,8 @@ class _HomeScreenState extends State<ScanScreen> {
     // than having to individually change instances of widgets.
     return new Scaffold(
       appBar: new AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
           title: new Text("Spesa"),
           elevation: 0.0,
           actions: <Widget>[
@@ -49,32 +37,13 @@ class _HomeScreenState extends State<ScanScreen> {
           ]),
 
       body: Container(
-              child: Column(
-        children: <Widget>[
-          createTopCard(),
-          new Card(
-            elevation: 6.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-            child: Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(bottom: 15),
-                      alignment: Alignment.centerLeft,
-                      child: Text("Prodotti",
-                          style: SmartTicketApp.headerText),
-                    ),
-                  _buildProductsList()
-                  ],
-                )
-            ),
-          ),
+          child: Column(
+            children: <Widget>[
+              createTopCard(),
 
-        ],
-      )),
+
+            ],
+          )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
@@ -99,12 +68,12 @@ class _HomeScreenState extends State<ScanScreen> {
     try {
       //Check permission!
       var hasPermission =
-          await SimplePermissions.checkPermission(Permission.Camera);
+      await SimplePermissions.checkPermission(Permission.Camera);
 
       if (!hasPermission) {
         //Request It
         var permissionStatus =
-            await SimplePermissions.requestPermission(Permission.Camera);
+        await SimplePermissions.requestPermission(Permission.Camera);
         debugPrint(permissionStatus.toString());
       }
 
@@ -144,14 +113,13 @@ class _HomeScreenState extends State<ScanScreen> {
 
                   Container(
                     child: Text(
-                    '${widget.currentItem.cost
-                        .toStringAsFixed(2)}€',
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                  ),
+                      "23,40€",
+                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    ),
                     margin: EdgeInsets.only(bottom: 10),
                   ),
                   Text(
-                    "Hai usato ${widget.currentItem.ticketsNum} Ticket",
+                    "Hai usato x Ticket",
                     style: TextStyle(fontSize: 18),
                   ),
                   LinearPercentIndicator(
@@ -159,7 +127,7 @@ class _HomeScreenState extends State<ScanScreen> {
                     animation: true,
                     lineHeight: 20.0,
                     animationDuration: 2000,
-                    percent: 0.4, //TODO calculate budget percent che cos'era sta roba?
+                    percent: 0.4, //TODO calculate budget percent
                     center: Text("40.0%", style: TextStyle(color: Colors.white),), //TODO idem con patate
                     linearStrokeCap: LinearStrokeCap.roundAll,
                     progressColor: SmartTicketApp.colorAccent,
@@ -172,46 +140,4 @@ class _HomeScreenState extends State<ScanScreen> {
       ],
     );
   }
-
-  FutureBuilder _buildProductsList(){
-    return FutureBuilder(
-      future: StDbHelper().getAllItems(),
-      builder:
-    (context, snapshot){
-      if (snapshot.hasData) {
-        return Text("DAJE");//createListView(context, snapshot);
-      } else
-        return Expanded(child: Center(child: CircularProgressIndicator()));
-    },
-    );
-  }
-
-  Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List itemsList = snapshot.data as List<ShoppingItem>;
-    if (itemsList.isEmpty) {
-      return Expanded(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Image.asset('assets/no_items.png', width: 150, height: 150),
-                Container(
-                    child: Text("Oops! Non ci sono elementi qui.",
-                        style: TextStyle(fontSize: 16.0)),
-                    padding: EdgeInsets.all(15))
-              ],
-            ),
-          ));
-    } else {
-      return Expanded(
-          child: Center(
-            child: ListView.builder(
-                itemCount: itemsList.length,
-                itemBuilder: (context, index) {
-                  return Text("daje");
-                }),
-          ));
-    }
-  }
-
 }
