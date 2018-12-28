@@ -5,6 +5,7 @@ import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:smart_ticket/models/product.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -49,30 +50,28 @@ class _HomeScreenState extends State<ScanScreen> {
           ]),
 
       body: Container(
-              child: Column(
+          child: Column(
         children: <Widget>[
           createTopCard(),
           new Card(
-            elevation: 6.0,
+            elevation: SmartTicketApp.defaultCardElevation,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
             child: Container(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Container(
                       margin: EdgeInsets.only(bottom: 15),
                       alignment: Alignment.centerLeft,
-                      child: Text("Prodotti",
-                          style: SmartTicketApp.headerText),
+                      child: Text("Prodotti", style: SmartTicketApp.headerText),
                     ),
-                  _buildProductsList()
+                    Container(child: _buildProductsList())
                   ],
-                )
-            ),
+                )),
           ),
-
         ],
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -121,13 +120,11 @@ class _HomeScreenState extends State<ScanScreen> {
           clipper: CustomShapeClipper(),
           child: Container(
             height: 150,
-            decoration: BoxDecoration(
-                color: SmartTicketApp.colorPrimary
-            ),
+            decoration: BoxDecoration(color: SmartTicketApp.colorPrimary),
           ),
         ),
         new Card(
-          elevation: 6.0,
+          elevation: SmartTicketApp.defaultCardElevation,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),
           margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
@@ -138,16 +135,15 @@ class _HomeScreenState extends State<ScanScreen> {
                   Container(
                     margin: EdgeInsets.only(bottom: 15),
                     alignment: Alignment.centerLeft,
-                    child: Text("Subtotale",
-                        style: SmartTicketApp.headerText),
+                    child: Text("Subtotale", style: SmartTicketApp.headerText),
                   ),
 
                   Container(
                     child: Text(
-                    '${widget.currentItem.cost
-                        .toStringAsFixed(2)}€',
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                  ),
+                      '${widget.currentItem.cost.toStringAsFixed(2)}€',
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                    ),
                     margin: EdgeInsets.only(bottom: 10),
                   ),
                   Text(
@@ -159,59 +155,70 @@ class _HomeScreenState extends State<ScanScreen> {
                     animation: true,
                     lineHeight: 20.0,
                     animationDuration: 2000,
-                    percent: 0.4, //TODO calculate budget percent che cos'era sta roba?
-                    center: Text("40.0%", style: TextStyle(color: Colors.white),), //TODO idem con patate
+                    percent: 0.4,
+                    //TODO calculate budget percent che cos'era sta roba?
+                    center: Text(
+                      "40.0%",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    //TODO idem con patate
                     linearStrokeCap: LinearStrokeCap.roundAll,
                     progressColor: SmartTicketApp.colorAccent,
                   ),
                   //createBudgetView()
                 ],
-              )
-          ),
+              )),
         ),
       ],
     );
   }
 
-  FutureBuilder _buildProductsList(){
+  Widget _buildProductsList() {
+    //debugPrint("Fetching products for Shoppingitem with id ${widget.currentItem.id}");
     return FutureBuilder(
-      future: StDbHelper().getAllItems(),
-      builder:
-    (context, snapshot){
-      if (snapshot.hasData) {
-        return Text("DAJE");//createListView(context, snapshot);
-      } else
-        return Expanded(child: Center(child: CircularProgressIndicator()));
-    },
-    );
+        future: StDbHelper().getProductsById(widget.currentItem.id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: <Widget>[
+                createListView(context, snapshot),
+                FlatButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
+                    },
+                    child: Text("AGGIUNGI"),
+                    textColor: SmartTicketApp.colorPrimary)
+              ],
+            );
+          } else
+            return Center(child: CircularProgressIndicator());
+        });
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List itemsList = snapshot.data as List<ShoppingItem>;
-    if (itemsList.isEmpty) {
-      return Expanded(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Image.asset('assets/no_items.png', width: 150, height: 150),
-                Container(
-                    child: Text("Oops! Non ci sono elementi qui.",
-                        style: TextStyle(fontSize: 16.0)),
-                    padding: EdgeInsets.all(15))
-              ],
-            ),
-          ));
+    List productsList = snapshot.data as List<Product>;
+    //debugPrint('${productsList.isEmpty}');
+    if (productsList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Image.asset('assets/no_items.png', width: 150, height: 150),
+            Container(
+                child: Text("Oops! Non ci sono elementi qui.",
+                    style: TextStyle(fontSize: 16.0)),
+                padding: EdgeInsets.all(15))
+          ],
+        ),
+      );
     } else {
-      return Expanded(
-          child: Center(
-            child: ListView.builder(
-                itemCount: itemsList.length,
-                itemBuilder: (context, index) {
-                  return Text("daje");
-                }),
-          ));
+      return Center(
+        child: ListView.builder(
+            itemCount: productsList.length,
+            itemBuilder: (context, index) {
+              return Text("daje");
+            }),
+      );
     }
   }
-
 }

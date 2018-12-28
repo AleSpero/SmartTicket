@@ -27,8 +27,8 @@ class _HomeScreenState extends State<AddProduct> {
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-          title: new Text("Spesa"),
-          elevation: 0.0,
+          title: new Text("Aggiungi Prodotto"),
+          //elevation: 0.0,
           actions: <Widget>[
             PopupMenuButton(
               itemBuilder: (context) {},
@@ -39,17 +39,14 @@ class _HomeScreenState extends State<AddProduct> {
       body: Container(
           child: Column(
             children: <Widget>[
-              createTopCard(),
-
-
             ],
           )),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+     // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
           child: Icon(Icons.search, color: Colors.white),
-          onPressed: scanItem),
-      bottomNavigationBar: BottomAppBar(
+          onPressed: null),
+      /*bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
         color: SmartTicketApp.colorPrimary,
@@ -60,84 +57,8 @@ class _HomeScreenState extends State<AddProduct> {
                 icon: Icon(Icons.history, color: Colors.white), onPressed: null)
           ],
         ),
-      ), // / This trailing comma makes auto-formatting nicer for build methods.
+      ),*/ // / This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
-  void scanItem() async {
-    try {
-      //Check permission!
-      var hasPermission =
-      await SimplePermissions.checkPermission(Permission.Camera);
-
-      if (!hasPermission) {
-        //Request It
-        var permissionStatus =
-        await SimplePermissions.requestPermission(Permission.Camera);
-        debugPrint(permissionStatus.toString());
-      }
-
-      SmartTicketApp.plaformChannel.invokeMethod(SmartTicketApp.OCR_METHOD);
-    } catch (PlatformException) {
-      //TODO error
-    }
-  }
-
-  Widget createTopCard() {
-    return Stack(
-      children: <Widget>[
-        ClipPath(
-          clipper: CustomShapeClipper(),
-          child: Container(
-            height: 150,
-            decoration: BoxDecoration(
-                color: SmartTicketApp.colorPrimary
-            ),
-          ),
-        ),
-        new Card(
-          elevation: 6.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
-          child: Container(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(bottom: 15),
-                    alignment: Alignment.centerLeft,
-                    child: Text("Subtotale",
-                        style: SmartTicketApp.headerText),
-                  ),
-
-                  Container(
-                    child: Text(
-                      "23,40€",
-                      style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-                    ),
-                    margin: EdgeInsets.only(bottom: 10),
-                  ),
-                  Text(
-                    "Hai usato x Ticket",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  LinearPercentIndicator(
-                    width: MediaQuery.of(context).size.width - 100,
-                    animation: true,
-                    lineHeight: 20.0,
-                    animationDuration: 2000,
-                    percent: 0.4, //TODO calculate budget percent
-                    center: Text("40.0%", style: TextStyle(color: Colors.white),), //TODO idem con patate
-                    linearStrokeCap: LinearStrokeCap.roundAll,
-                    progressColor: SmartTicketApp.colorAccent,
-                  ),
-                  //createBudgetView()
-                ],
-              )
-          ),
-        ),
-      ],
-    );
-  }
 }

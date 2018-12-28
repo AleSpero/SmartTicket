@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/home.dart';
 import 'package:smart_ticket/scan.dart';
 
@@ -14,10 +15,13 @@ class SmartTicketApp extends StatelessWidget {
   static var colorAccent = Colors.orange[900];
   static var greyBkg = Colors.grey[50];
 
+  static var defaultCardElevation = 4.0;
+
   static var appTitle = "Smart Ticket";
 
   static const String ROUTE_HOME = "/";
   static const String ROUTE_SCAN = "/scan";
+  static const String ROUTE_ADD_PRODUCT = "/add";
   static const String ST_CHANNEL = "smartTicket";
   static const String OCR_METHOD = "startOcr";
 
@@ -64,7 +68,8 @@ class SmartTicketApp extends StatelessWidget {
       routes: {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(title: appTitle),
-        ROUTE_SCAN: (context) => ScanScreen(title: appTitle)
+        ROUTE_SCAN: (context) => ScanScreen(title: appTitle),
+        ROUTE_ADD_PRODUCT: (context) => AddProduct(title: appTitle)
       },
     );
   }

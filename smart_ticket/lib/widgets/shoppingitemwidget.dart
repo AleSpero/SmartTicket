@@ -12,7 +12,7 @@ class ShoppingItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement swipe to dismiss + dragdrop
     return Card(
-        elevation: 4.0,
+        elevation: SmartTicketApp.defaultCardElevation,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15))),
         margin: EdgeInsets.symmetric(vertical: 15, horizontal: 25),

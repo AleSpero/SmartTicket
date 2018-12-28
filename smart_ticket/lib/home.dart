@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         new Card(
-          elevation: 6.0,
+          elevation: SmartTicketApp.defaultCardElevation,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),
           margin: EdgeInsets.symmetric(vertical: 20, horizontal: 25),

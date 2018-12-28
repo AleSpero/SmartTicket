@@ -14,7 +14,7 @@ class ShoppingItem {
 
   List<Product> products = new List<Product>();
 
-  int get id => _id;
+  int get id => _id != null ? _id : -1;
 
   String get date => _date;
 
