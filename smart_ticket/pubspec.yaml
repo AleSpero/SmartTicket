@@ -32,6 +32,8 @@ flutter:
 
   assets:
     - assets/no_items.png
+    # - assets/no_items_product.png
+    - assets/db/SmartTicketDb.db
 
   # To add assets to your application, add an assets section, like this:
   # assets:

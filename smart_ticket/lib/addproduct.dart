@@ -2,13 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
+import 'package:smart_ticket/helpers/StDbHelper.dart';
+import 'package:smart_ticket/helpers/productsearchdelegate.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:smart_ticket/models/productsearchitem.dart';
 
 class AddProduct extends StatefulWidget {
   AddProduct({Key key, this.title}) : super(key: key);
 
   final String title;
+
+  List<ProductSearchItem> hintProducts = List<ProductSearchItem>();
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -17,12 +22,9 @@ class AddProduct extends StatefulWidget {
 class _HomeScreenState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    _initHintList();
+
     return new Scaffold(
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -30,9 +32,14 @@ class _HomeScreenState extends State<AddProduct> {
           title: new Text("Aggiungi Prodotto"),
           //elevation: 0.0,
           actions: <Widget>[
-            PopupMenuButton(
-              itemBuilder: (context) {},
-              icon: Icon(Icons.more_vert, color: Colors.white),
+            IconButton(
+              icon: Icon(Icons.search, color: Colors.white),
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate: ProductSearchDelegate()
+                );
+              }
             )
           ]),
 
@@ -60,5 +67,14 @@ class _HomeScreenState extends State<AddProduct> {
       ),*/ // / This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  void _initHintList(){
+ /*   if(widget.hintProducts.isEmpty){
+      //Init hint products list
+      StDbHelper().getAllHintProducts().then((list){
+        widget.hintProducts = list;
+      });
+    }
+  */}
 
 }

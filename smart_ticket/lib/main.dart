@@ -64,7 +64,7 @@ class SmartTicketApp extends StatelessWidget {
       title: appTitle,
       theme: //TODO theme for ios
       androidThemeData,
-      initialRoute: '/',
+      initialRoute: ROUTE_HOME,
       routes: {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(title: appTitle),

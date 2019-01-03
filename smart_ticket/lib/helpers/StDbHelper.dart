@@ -1,10 +1,13 @@
 
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_ticket/models/product.dart';
+import 'package:smart_ticket/models/productsearchitem.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,6 +16,10 @@ class StDbHelper {
 
   static const String TABLE_PRODUCT = "product";
   static const String TABLE_SHOPPING_ITEM = "shopping_item";
+  static const String TABLE_CATEGORY = "category";
+  static const String TABLE_SEARCH_PRODUCT = "search_product";
+
+
   static const String _SHOPPINGITEM_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS 'shopping_item' ("
       "'id'	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
       "'name'	TEXT NOT NULL,"
@@ -44,10 +51,18 @@ class StDbHelper {
   StDbHelper.internal();
 
   initDb() async {
-    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    //TODO assets?
-    String path = join(documentsDirectory.path, "SmartTicketDb.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var dbDirPath = await getDatabasesPath();
+    String dbPath = join(dbDirPath, "SmartTicketDb.db");
+
+    if(!await File(dbPath).exists()) {
+// Create the writable database file from the bundled demo database file:
+      ByteData data = await rootBundle.load("assets/db/SmartTicketDb.db");
+      List<int> bytes = data.buffer.asUint8List(
+          data.offsetInBytes, data.lengthInBytes);
+      await File(dbPath).writeAsBytes(bytes);
+    }
+
+    var theDb = await openDatabase(dbPath, version: 1, onCreate: _onCreate);
     return theDb;
   }
 
@@ -59,6 +74,7 @@ class StDbHelper {
 
 
   //Metodi da utilizzare (prendili da quelli fatti con room)
+  //TODO fagli implementare interfaccia con metodi
 
   void addProduct(Product product) async {
     var dbClient = await db;
@@ -111,7 +127,30 @@ class StDbHelper {
       return result;
     } on Exception catch(e){
       debugPrint(e.toString());
+      return null;
     }
 
+  }
+
+  Future<List<ProductSearchItem>> getAllHintProducts() async {
+    try{
+
+      var dbClient = await db;
+
+      var tempResult = await dbClient.query(
+          TABLE_SEARCH_PRODUCT);
+
+      var result = List<ProductSearchItem>();
+
+      for (Map map in tempResult) {
+        result.add(ProductSearchItem.fromMap(map));
+      }
+
+      return result;
+
+    } on Exception catch(e){
+      debugPrint(e.toString());
+      return List<ProductSearchItem>();
+    }
   }
 }

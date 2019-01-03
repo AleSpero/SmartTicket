@@ -53,13 +53,15 @@ class _HomeScreenState extends State<ScanScreen> {
           child: Column(
         children: <Widget>[
           createTopCard(),
-          new Card(
+          SingleChildScrollView(
+            child: new Card(
             elevation: SmartTicketApp.defaultCardElevation,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
             child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -72,7 +74,8 @@ class _HomeScreenState extends State<ScanScreen> {
                   ],
                 )),
           ),
-        ],
+          )
+        ]
       )),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
@@ -90,7 +93,8 @@ class _HomeScreenState extends State<ScanScreen> {
                 icon: Icon(Icons.history, color: Colors.white), onPressed: null)
           ],
         ),
-      ), // / This trailing comma makes auto-formatting nicer for build methods.
+      ),
+    // / This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -184,7 +188,8 @@ class _HomeScreenState extends State<ScanScreen> {
                 createListView(context, snapshot),
                 FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
+                      Navigator.of(context)
+                          .pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
                     },
                     child: Text("AGGIUNGI"),
                     textColor: SmartTicketApp.colorPrimary)
@@ -203,7 +208,7 @@ class _HomeScreenState extends State<ScanScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Image.asset('assets/no_items.png', width: 150, height: 150),
+            new Image.asset('assets/no_items.png', width: 130, height: 130),
             Container(
                 child: Text("Oops! Non ci sono elementi qui.",
                     style: TextStyle(fontSize: 16.0)),
