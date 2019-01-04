@@ -2,6 +2,7 @@ package com.sperolabs.smartticket.ocr
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.*
 import android.os.Bundle
 import android.util.Log
@@ -33,6 +34,10 @@ import android.os.Build
 import android.util.SparseIntArray
 import android.view.Surface
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.vision.CameraSource
+import com.sperolabs.smartticket.helpers.GraphicOverlay
+import com.sperolabs.smartticket.helpers.TextGraphic
 import java.io.ByteArrayOutputStream
 
 
@@ -43,11 +48,14 @@ import java.io.ByteArrayOutputStream
 class OcrActivity : Activity() {
 
     private lateinit var fotoApparat: Fotoapparat
+    private lateinit var graphicOverlay: GraphicOverlay
     private lateinit var cameraView: CameraView
     private lateinit var textRecognizer : FirebaseVisionTextRecognizer
     private var currentProcessingTask : Task<FirebaseVisionText>? = null
 
     companion object {
+        //Da 1 char parte intera + da 1 a 4 decimali
+        private val REGEX_DECIMALS_RULE = "^[0-9]*(\\.[0-9]{1,2})?\$"
     private val ORIENTATIONS = SparseIntArray()
         init {
             ORIENTATIONS.append(Surface.ROTATION_0, 90)
@@ -69,6 +77,8 @@ class OcrActivity : Activity() {
         var cameraSide = findViewById<ImageView>(R.id.cameraSide)
         var flashButton = findViewById<ImageView>(R.id.flash)
 
+        graphicOverlay = findViewById(R.id.graphic_overlay)
+
         cameraView = findViewById(R.id.camera)
 
         //Init text processor
@@ -83,12 +93,18 @@ class OcrActivity : Activity() {
                        frameProcessor = initFrameProcessor()
                )
         )
+
+
         cameraSide.setOnClickListener {
             fotoApparat.switchTo(
                     if(fotoApparat.isAvailable { LensPosition.Back } and isBackCamera) back() else front(),
                     CameraConfiguration.default())
             isBackCamera = isBackCamera.not()
         }
+
+        //setup overlay
+        graphicOverlay.setCameraInfo(cameraView.width, cameraView.height, if(isBackCamera) CameraSource.CAMERA_FACING_FRONT
+        else CameraSource.CAMERA_FACING_BACK )
 
         flashButton.setOnClickListener {
 
@@ -118,6 +134,9 @@ class OcrActivity : Activity() {
     }
 
     fun initFrameProcessor() : FrameProcessor {
+
+        var result : String? = null
+
         //Metodo che inizializza (e definisce) il comportamento del frame processor
         return {frame ->
 
@@ -134,8 +153,8 @@ class OcrActivity : Activity() {
                         /* TODO riguarda If you use the Camera2 API, capture images in ImageFormat.YUV_420_888 format.
                     If you use the older Camera API, capture images in ImageFormat.NV21 format.*/
                         .setRotation(
-                                getRotationCompensation(if(isBackCamera) Camera.CameraInfo.CAMERA_FACING_FRONT
-                                else Camera.CameraInfo.CAMERA_FACING_BACK, this,this)
+                                getRotationCompensation(if(isBackCamera) CameraSource.CAMERA_FACING_FRONT
+                                else CameraSource.CAMERA_FACING_BACK, this,this)
                         ) //TODO rotationcompensation non funziona bene, debugga
                         .build()
 
@@ -156,14 +175,24 @@ class OcrActivity : Activity() {
                         //TODO valuta di aggiungere oncompletelistener al posto di questi due
                         .addOnSuccessListener {
                             //TODO wip
+
+                            graphicOverlay.clear()
+
                             it.textBlocks.forEach { block ->
                                 block.lines.forEach { line ->
                                     line.elements.forEach { element ->
-                                        element.boundingBox
+
+                                        Log.d("TEXT_RECOGNITION", "Value: ${element.text}, confidence: ${element.confidence}")
+
+                                        if(REGEX_DECIMALS_RULE.toRegex().matches(element.text)) {
+                                            graphicOverlay.add(TextGraphic(graphicOverlay, element))
+                                            //BIP!
+                                            result = element.text
+                                        }
+
                                     }
                                 }
                             }
-                            Log.d("TEXT_PROCESSOR", it.text)
                            // Toast.makeText(this, it.text, Toast.LENGTH_LONG).show()
 
                         }
@@ -173,6 +202,27 @@ class OcrActivity : Activity() {
                             Log.d("TEXT_PROCESSOR_ERROR", it.message)
 
                         }
+            }
+
+            Log.d("DIO", result ?: "Nada")
+
+
+            result?.let {
+                
+                runOnUiThread {
+                    AlertDialog.Builder(this)
+                            .setTitle("Attenzione")
+                            .setMessage("Confermi il valore di $result€?")
+                            .setPositiveButton(android.R.string.yes, DialogInterface.OnClickListener { dialog, which ->
+                                this.finish()
+                            })
+                            .setNegativeButton(android.R.string.no, DialogInterface.OnClickListener { dialog, which ->
+                                fotoApparat.stop()
+                                dialog.dismiss()
+                                result = null
+                            })
+                            .show()
+                }
             }
 
         }
