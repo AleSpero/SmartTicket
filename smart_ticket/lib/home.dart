@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Image.asset('assets/no_items.png', width: 150, height: 150),
+                new Image.asset('assets/icons/no_items.png', width: 150, height: 150),
                 Container(
                     child: Text("Oops! Non ci sono elementi qui.",
                         style: TextStyle(fontSize: 16.0)),

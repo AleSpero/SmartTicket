@@ -8,10 +8,19 @@ class Product{
   //Costruttore
   Product(this._id, this._cost, this._name, this._shoppingItemId);
 
-//Getters
   String get name => _name;
   double get cost => _cost;
   int get id => _id;
+
+
+  set shoppingItemId(int value) {
+    _shoppingItemId = value;
+  }
+
+  Product.generate(String name){
+    _name = name;
+    _cost = 0;
+  }
 
   //Metodi che servono per sqflite
 

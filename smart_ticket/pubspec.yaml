@@ -31,7 +31,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/no_items.png
+    - assets/icons/no_items.png
+    - assets/icons/
     # - assets/no_items_product.png
     - assets/db/SmartTicketDb.db
 

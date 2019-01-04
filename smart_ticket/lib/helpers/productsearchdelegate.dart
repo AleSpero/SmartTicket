@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/models/productsearchitem.dart';
+import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/widgets/productsearchwidget.dart';
 
 class ProductSearchDelegate extends SearchDelegate {
+
+  ShoppingItem _currentShoppingItem;
+
+  ProductSearchDelegate(this._currentShoppingItem);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -52,7 +58,7 @@ class ProductSearchDelegate extends SearchDelegate {
           return ListView.builder(
               itemCount: finalList.length,
               itemBuilder: (context, index){
-              return Text(finalList[index].name);
+              return ProductSearchWidget(finalList[index], _currentShoppingItem);
           });
         }
       },

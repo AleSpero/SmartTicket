@@ -19,6 +19,9 @@ class StDbHelper {
   static const String TABLE_CATEGORY = "category";
   static const String TABLE_SEARCH_PRODUCT = "search_product";
 
+  static const String QUERY_GET_SEARCH_PRODUCTS =
+      "select search_product.id, search_product.name, category.img_path from search_product inner join category on search_product.category = category._id";
+
 
   static const String _SHOPPINGITEM_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS 'shopping_item' ("
       "'id'	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -137,8 +140,7 @@ class StDbHelper {
 
       var dbClient = await db;
 
-      var tempResult = await dbClient.query(
-          TABLE_SEARCH_PRODUCT);
+      var tempResult = await dbClient.rawQuery(QUERY_GET_SEARCH_PRODUCTS);
 
       var result = List<ProductSearchItem>();
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
@@ -189,7 +190,12 @@ class _HomeScreenState extends State<ScanScreen> {
                 FlatButton(
                     onPressed: () {
                       Navigator.of(context)
-                          .pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
+                      .push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                          AddProductScreen(widget.currentItem)
+                      ));
+                          //.pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
                     },
                     child: Text("AGGIUNGI"),
                     textColor: SmartTicketApp.colorPrimary)
@@ -208,7 +214,7 @@ class _HomeScreenState extends State<ScanScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Image.asset('assets/no_items.png', width: 130, height: 130),
+            new Image.asset('assets/icons/no_items.png', width: 130, height: 130),
             Container(
                 child: Text("Oops! Non ci sono elementi qui.",
                     style: TextStyle(fontSize: 16.0)),

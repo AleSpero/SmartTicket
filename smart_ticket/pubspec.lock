@@ -80,7 +80,7 @@ packages:
       name: percent_indicator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.10"
+    version: "1.0.12"
   quiver:
     dependency: transitive
     description:
@@ -113,7 +113,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.0"
+    version: "0.13.0+1"
   stack_trace:
     dependency: transitive
     description:
@@ -141,7 +141,7 @@ packages:
       name: synchronized
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.3"
+    version: "1.5.3+2"
   term_glyph:
     dependency: transitive
     description:

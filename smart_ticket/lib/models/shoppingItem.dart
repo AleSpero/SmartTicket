@@ -61,6 +61,11 @@ class ShoppingItem {
     _notes = map['notes'];
   }
 
+  void addProduct(Product product){
+    product.shoppingItemId = id;
+    products.add(product);
+  }
+
   set name(String value) {
     _name = value;
   }

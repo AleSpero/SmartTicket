@@ -2,7 +2,7 @@ class ProductSearchItem {
 
   int _id;
   String _name;
-  //int category; //TODO
+  String _categoryIcon; //TODO
 
 
   //Costruttore
@@ -10,6 +10,7 @@ class ProductSearchItem {
 
 //Getters
   String get name => _name;
+  String get categoryIcon => _categoryIcon;
   int get id => _id;
 
   //Metodi che servono per sqflite
@@ -17,12 +18,14 @@ class ProductSearchItem {
   ProductSearchItem.fromMap(Map<String, dynamic> map){
     _id = map['id'];
     _name = map['name'];
+    _categoryIcon = map['img_path'];
   }
 
   Map<String, dynamic> toMap(){
     return {
       'id' : _id,
       'name' : _name,
+      'img_path' : _categoryIcon
     };
   }
 

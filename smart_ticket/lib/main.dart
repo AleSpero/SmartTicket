@@ -69,7 +69,7 @@ class SmartTicketApp extends StatelessWidget {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(title: appTitle),
         ROUTE_SCAN: (context) => ScanScreen(title: appTitle),
-        ROUTE_ADD_PRODUCT: (context) => AddProduct(title: appTitle)
+        ROUTE_ADD_PRODUCT: (context) => AddProductScreen(null, title: appTitle)
       },
     );
   }

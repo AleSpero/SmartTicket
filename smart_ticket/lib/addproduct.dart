@@ -7,19 +7,22 @@ import 'package:smart_ticket/helpers/productsearchdelegate.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/productsearchitem.dart';
+import 'package:smart_ticket/models/shoppingItem.dart';
 
-class AddProduct extends StatefulWidget {
-  AddProduct({Key key, this.title}) : super(key: key);
+class AddProductScreen extends StatefulWidget {
 
+  AddProductScreen(this.currentItem,{Key key, this.title}) : super(key: key);
+
+  final ShoppingItem currentItem;
   final String title;
 
   List<ProductSearchItem> hintProducts = List<ProductSearchItem>();
 
   @override
-  _HomeScreenState createState() => new _HomeScreenState();
+  _AddProductScreenState createState() => new _AddProductScreenState();
 }
 
-class _HomeScreenState extends State<AddProduct> {
+class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
 
@@ -35,10 +38,13 @@ class _HomeScreenState extends State<AddProduct> {
             IconButton(
               icon: Icon(Icons.search, color: Colors.white),
               onPressed: () {
+                setState(() {
+
                 showSearch(
                     context: context,
-                    delegate: ProductSearchDelegate()
+                    delegate: ProductSearchDelegate(widget.currentItem)
                 );
+                });
               }
             )
           ]),
@@ -46,13 +52,18 @@ class _HomeScreenState extends State<AddProduct> {
       body: Container(
           child: Column(
             children: <Widget>[
+             Text("${widget.currentItem.products.length}")
             ],
           )),
      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
-          child: Icon(Icons.search, color: Colors.white),
-          onPressed: null),
+          child: Icon(Icons.arrow_forward, color: Colors.white),
+          onPressed: (){
+            setState(() {
+
+            });
+          }),
       /*bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
