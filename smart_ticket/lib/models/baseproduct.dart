@@ -1,12 +1,20 @@
-class ProductSearchItem {
+import 'package:smart_ticket/models/product.dart';
+
+class BaseProduct {
 
   int _id;
   String _name;
-  String _categoryIcon; //TODO
+  String _categoryIcon;
 
 
   //Costruttore
-  ProductSearchItem(this._id, this._name);
+  BaseProduct(this._id, this._name);
+
+
+  BaseProduct.generate(String name){
+    _name = name;
+    _categoryIcon = Product.BASE_CATEGORY_ICON;
+  }
 
 //Getters
   String get name => _name;
@@ -15,7 +23,7 @@ class ProductSearchItem {
 
   //Metodi che servono per sqflite
 
-  ProductSearchItem.fromMap(Map<String, dynamic> map){
+  BaseProduct.fromMap(Map<String, dynamic> map){
     _id = map['id'];
     _name = map['name'];
     _categoryIcon = map['img_path'];

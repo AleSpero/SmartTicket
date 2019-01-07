@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/scan.dart';
 import 'package:smart_ticket/widgets/colortile.dart';
 
 class InsertDialog extends StatefulWidget {
@@ -81,7 +83,12 @@ class InsertDialogState extends State<InsertDialog>{
       StDbHelper().addShoppingItem(newItem);
 
       Navigator.of(context).pop();
-      Navigator.of(context).pushNamed(SmartTicketApp.ROUTE_SCAN);
+
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => AddProductScreen(newItem))
+      );
+
+      //Navigator.of(context).pushNamed(SmartTicketApp.ROUTE_SCAN);
     }
 
     //valido widget

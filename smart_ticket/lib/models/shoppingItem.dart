@@ -78,5 +78,9 @@ class ShoppingItem {
     _notes = value;
   }
 
+  set id(int id){
+    _id = id;
+  }
+
 
 }

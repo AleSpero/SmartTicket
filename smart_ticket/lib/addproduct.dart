@@ -6,8 +6,9 @@ import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/helpers/productsearchdelegate.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
-import 'package:smart_ticket/models/productsearchitem.dart';
+import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/scan.dart';
 
 class AddProductScreen extends StatefulWidget {
 
@@ -16,7 +17,7 @@ class AddProductScreen extends StatefulWidget {
   final ShoppingItem currentItem;
   final String title;
 
-  List<ProductSearchItem> hintProducts = List<ProductSearchItem>();
+  List<BaseProduct> hintProducts = List<BaseProduct>();
 
   @override
   _AddProductScreenState createState() => new _AddProductScreenState();
@@ -38,13 +39,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
             IconButton(
               icon: Icon(Icons.search, color: Colors.white),
               onPressed: () {
-                setState(() {
-
                 showSearch(
                     context: context,
                     delegate: ProductSearchDelegate(widget.currentItem)
                 );
-                });
               }
             )
           ]),
@@ -52,7 +50,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       body: Container(
           child: Column(
             children: <Widget>[
-             Text("${widget.currentItem.products.length}")
+             Center( child: Text("${widget.currentItem.products.length}", style:  TextStyle(fontSize: 20)))
             ],
           )),
      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
@@ -60,9 +58,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
           backgroundColor: SmartTicketApp.colorAccent,
           child: Icon(Icons.arrow_forward, color: Colors.white),
           onPressed: (){
-            setState(() {
 
-            });
+            Navigator.of(context).pop();
+
+           Navigator.of(context).push(
+             MaterialPageRoute(builder: (context) => ScanScreen(widget.currentItem))
+           );
           }),
       /*bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),

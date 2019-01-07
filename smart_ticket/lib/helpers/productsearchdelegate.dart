@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
-import 'package:smart_ticket/models/productsearchitem.dart';
+import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
-import 'package:smart_ticket/widgets/productsearchwidget.dart';
+import 'package:smart_ticket/widgets/productwidget.dart';
 
 class ProductSearchDelegate extends SearchDelegate {
 
@@ -51,14 +51,21 @@ class ProductSearchDelegate extends SearchDelegate {
           return Center(child: CircularProgressIndicator());
         }
         else{
-          List<ProductSearchItem> hintList = snapshot.data as List;
-          List<ProductSearchItem> finalList = hintList.where((item) =>
+          List<BaseProduct> hintList = snapshot.data as List;
+          List<BaseProduct> finalList = hintList.where((item) =>
               item.name.toLowerCase().startsWith(query.toLowerCase())).toList();
+
+          //Aggiungo come primo elemento della lista il prodotto che l'utente sta "digitando"
+
+          BaseProduct fakeProduct = BaseProduct.generate(query);
+
+          if(query.length > 1 && !finalList.contains(fakeProduct))
+          finalList.insert(0, fakeProduct);
 
           return ListView.builder(
               itemCount: finalList.length,
               itemBuilder: (context, index){
-              return ProductSearchWidget(finalList[index], _currentShoppingItem);
+              return ProductWidget(finalList[index], _currentShoppingItem);
           });
         }
       },

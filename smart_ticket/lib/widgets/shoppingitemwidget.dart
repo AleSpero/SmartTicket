@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/scan.dart';
 
 class ShoppingItemWidget extends StatelessWidget {
   final ShoppingItem item;
@@ -18,7 +19,9 @@ class ShoppingItemWidget extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
         child: InkWell(
           onTap: (){
-            Navigator.of(context).pushNamed(SmartTicketApp.ROUTE_SCAN); //TODO passa oggetto?
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ScanScreen(item))
+            );
           },
           child: Container(
             padding: EdgeInsets.all(20),

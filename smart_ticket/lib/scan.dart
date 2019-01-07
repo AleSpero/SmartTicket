@@ -7,10 +7,12 @@ import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/product.dart';
+import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/widgets/productwidget.dart';
 
 class ScanScreen extends StatefulWidget {
-  ScanScreen({Key key, this.title}) : super(key: key);
+  ScanScreen(this.currentItem, {Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -22,7 +24,7 @@ class ScanScreen extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  ShoppingItem currentItem = ShoppingItem(); //TODO temp
+  ShoppingItem currentItem; //TODO temp
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -51,11 +53,10 @@ class _HomeScreenState extends State<ScanScreen> {
           ]),
 
       body: Container(
-          child: Column(
-        children: <Widget>[
-          createTopCard(),
-          SingleChildScrollView(
-            child: new Card(
+          child: Column(children: <Widget>[
+        createTopCard(),
+        SingleChildScrollView(
+          child: new Card(
             elevation: SmartTicketApp.defaultCardElevation,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -71,13 +72,12 @@ class _HomeScreenState extends State<ScanScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text("Prodotti", style: SmartTicketApp.headerText),
                     ),
-                    Container(child: _buildProductsList())
+                    _buildProductsList()
                   ],
                 )),
           ),
-          )
-        ]
-      )),
+        )
+      ])),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
@@ -95,7 +95,7 @@ class _HomeScreenState extends State<ScanScreen> {
           ],
         ),
       ),
-    // / This trailing comma makes auto-formatting nicer for build methods.
+      // / This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
@@ -184,23 +184,22 @@ class _HomeScreenState extends State<ScanScreen> {
         future: StDbHelper().getProductsById(widget.currentItem.id),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Column(
+            return Flexible(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 createListView(context, snapshot),
                 FlatButton(
                     onPressed: () {
-                      Navigator.of(context)
-                      .push(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                          AddProductScreen(widget.currentItem)
-                      ));
-                          //.pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              AddProductScreen(widget.currentItem)));
+                      //.pushNamed(SmartTicketApp.ROUTE_ADD_PRODUCT);
                     },
                     child: Text("AGGIUNGI"),
                     textColor: SmartTicketApp.colorPrimary)
               ],
-            );
+            ));
           } else
             return Center(child: CircularProgressIndicator());
         });
@@ -214,7 +213,8 @@ class _HomeScreenState extends State<ScanScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Image.asset('assets/icons/no_items.png', width: 130, height: 130),
+            new Image.asset('assets/icons/no_products.png',
+                width: 100, height: 100),
             Container(
                 child: Text("Oops! Non ci sono elementi qui.",
                     style: TextStyle(fontSize: 16.0)),
@@ -223,12 +223,14 @@ class _HomeScreenState extends State<ScanScreen> {
         ),
       );
     } else {
-      return Center(
-        child: ListView.builder(
-            itemCount: productsList.length,
-            itemBuilder: (context, index) {
-              return Text("daje");
-            }),
+      return Container(height: 50,child: ListView.builder(
+                  itemCount: productsList.length,
+                  itemBuilder: (context, index) {
+                    //TODO refactoring model object db pls (product widget prende un baseproduct,
+                    //che può essere sia normale che il product che aggiungo effettivamente))
+
+                    return ProductWidget(productsList[index], widget.currentItem);
+                  })
       );
     }
   }

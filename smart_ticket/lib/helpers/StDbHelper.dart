@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_ticket/models/product.dart';
-import 'package:smart_ticket/models/productsearchitem.dart';
+import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -92,7 +92,8 @@ class StDbHelper {
 
   void addShoppingItem(ShoppingItem item) async {
     var dbClient = await db;
-    await dbClient.insert(TABLE_SHOPPING_ITEM, item.toMap());
+    //Aggiungo id ad oggetto stesso
+    item.id = await dbClient.insert(TABLE_SHOPPING_ITEM, item.toMap());
   }
 
   Future<int> removeShoppingItem(ShoppingItem item) async {
@@ -125,7 +126,7 @@ class StDbHelper {
         result.add(Product.fromMap(map));
       }
 
-      //debugPrint("Found ${result.length} products");
+      debugPrint("Found ${result.length} products");
 
       return result;
     } on Exception catch(e){
@@ -135,24 +136,24 @@ class StDbHelper {
 
   }
 
-  Future<List<ProductSearchItem>> getAllHintProducts() async {
+  Future<List<BaseProduct>> getAllHintProducts() async {
     try{
 
       var dbClient = await db;
 
       var tempResult = await dbClient.rawQuery(QUERY_GET_SEARCH_PRODUCTS);
 
-      var result = List<ProductSearchItem>();
+      var result = List<BaseProduct>();
 
       for (Map map in tempResult) {
-        result.add(ProductSearchItem.fromMap(map));
+        result.add(BaseProduct.fromMap(map));
       }
 
       return result;
 
     } on Exception catch(e){
       debugPrint(e.toString());
-      return List<ProductSearchItem>();
+      return List<BaseProduct>();
     }
   }
 }
