@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //Mostro snackbar
     Scaffold.of(scaffoldContext).showSnackBar(
-        SnackBar(content: Text("Spesa rimossa"),
+        SnackBar(duration: Duration(milliseconds: 1500), content: Text("Spesa rimossa"),
             action: SnackBarAction(label: "Annulla", onPressed: () {
               setState(() {
                 StDbHelper().addShoppingItem(item);

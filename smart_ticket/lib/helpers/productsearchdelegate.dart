@@ -65,7 +65,7 @@ class ProductSearchDelegate extends SearchDelegate {
           return ListView.builder(
               itemCount: finalList.length,
               itemBuilder: (context, index){
-              return ProductWidget(finalList[index], _currentShoppingItem);
+              return ProductWidget(finalList[index], _currentShoppingItem, ProductWidget.STYLE_ADDSCREEN);
           });
         }
       },

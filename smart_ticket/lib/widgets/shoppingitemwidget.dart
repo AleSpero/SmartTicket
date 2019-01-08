@@ -11,13 +11,16 @@ class ShoppingItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement swipe to dismiss + dragdrop
+
+    var cardBorderRadius = BorderRadius.all(Radius.circular(15));
+
     return Card(
         elevation: SmartTicketApp.defaultCardElevation,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+            borderRadius: cardBorderRadius),
         margin: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
         child: InkWell(
+          borderRadius: cardBorderRadius,
           onTap: (){
             Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => ScanScreen(item))

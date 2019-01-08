@@ -48,7 +48,7 @@ class SmartTicketApp extends StatelessWidget {
   static const plaformChannel = const MethodChannel(ST_CHANNEL);
 
   static final TextStyle headerText = TextStyle(
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: FontWeight.w800,
       color: Colors.black54
   );

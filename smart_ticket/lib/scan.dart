@@ -132,7 +132,7 @@ class _HomeScreenState extends State<ScanScreen> {
           elevation: SmartTicketApp.defaultCardElevation,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),
-          margin: EdgeInsets.symmetric(vertical: 25, horizontal: 25),
+          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
           child: Container(
               padding: EdgeInsets.all(20),
               child: Column(
@@ -154,22 +154,7 @@ class _HomeScreenState extends State<ScanScreen> {
                   Text(
                     "Hai usato ${widget.currentItem.ticketsNum} Ticket",
                     style: TextStyle(fontSize: 18),
-                  ),
-                  LinearPercentIndicator(
-                    width: MediaQuery.of(context).size.width - 100,
-                    animation: true,
-                    lineHeight: 20.0,
-                    animationDuration: 2000,
-                    percent: 0.4,
-                    //TODO calculate budget percent che cos'era sta roba?
-                    center: Text(
-                      "40.0%",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    //TODO idem con patate
-                    linearStrokeCap: LinearStrokeCap.roundAll,
-                    progressColor: SmartTicketApp.colorAccent,
-                  ),
+                  )
                   //createBudgetView()
                 ],
               )),
@@ -223,13 +208,23 @@ class _HomeScreenState extends State<ScanScreen> {
         ),
       );
     } else {
-      return Container(height: 50,child: ListView.builder(
+      return Container(height: 100,child: ListView.builder(
                   itemCount: productsList.length,
                   itemBuilder: (context, index) {
                     //TODO refactoring model object db pls (product widget prende un baseproduct,
                     //che può essere sia normale che il product che aggiungo effettivamente))
 
-                    return ProductWidget(productsList[index], widget.currentItem);
+                    return Dismissible(
+                     key: Key('${index.hashCode}'),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) {
+                       //TODO remove per bene
+                        productsList.removeAt(index);
+                      }, //TODO scroll smooth physics coso
+                      //secondaryBackground: ,
+                      child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN)
+                    );
+
                   })
       );
     }
