@@ -4,6 +4,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
+import 'package:smart_ticket/helpers/ticketutils.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/product.dart';
@@ -53,10 +54,9 @@ class _HomeScreenState extends State<ScanScreen> {
           ]),
 
       body: Container(
-          child: Column(children: <Widget>[
+          child: ListView(children: <Widget>[
         createTopCard(),
-        SingleChildScrollView(
-          child: new Card(
+          Card(
             elevation: SmartTicketApp.defaultCardElevation,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -76,7 +76,6 @@ class _HomeScreenState extends State<ScanScreen> {
                   ],
                 )),
           ),
-        )
       ])),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
@@ -152,8 +151,14 @@ class _HomeScreenState extends State<ScanScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                   ),
                   Text(
-                    "Hai usato ${widget.currentItem.ticketsNum} Ticket",
+                    "Servono ${widget.currentItem.ticketsNum} Ticket",
                     style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    "E una differenza di ${TicketUtils.calculateDifference(widget.currentItem.cost,
+                        widget.currentItem.ticketsNum).toStringAsFixed(2)}€",
+                    //TODO valuta metodo in ticketutils
+                    //style: TextStyle(fontSize: ),
                   )
                   //createBudgetView()
                 ],
@@ -208,7 +213,8 @@ class _HomeScreenState extends State<ScanScreen> {
         ),
       );
     } else {
-      return Container(height: 100,child: ListView.builder(
+      return Container( child: ListView.builder(
+                  shrinkWrap: true,
                   itemCount: productsList.length,
                   itemBuilder: (context, index) {
                     //TODO refactoring model object db pls (product widget prende un baseproduct,
@@ -221,7 +227,10 @@ class _HomeScreenState extends State<ScanScreen> {
                        //TODO remove per bene
                         productsList.removeAt(index);
                       }, //TODO scroll smooth physics coso
-                      //secondaryBackground: ,
+                      background: Container(color: Colors.red[600],
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.only(right: 10),
+                      child: Icon(Icons.delete)),
                       child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN)
                     );
 

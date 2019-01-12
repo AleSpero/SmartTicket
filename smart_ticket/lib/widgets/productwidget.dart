@@ -12,15 +12,18 @@ class ProductWidget extends StatefulWidget {
   dynamic _item; //TODO REFACTORING CON HIERACY base -> Product
   ShoppingItem _shoppingItem;
 
-  bool tempBooleanCheckbox = false;
-
+  bool checkBoxValue = false;
   int itemStyle;
+
+  static var addedProductColor = Colors.red[600];
+  static var removedProductColor = Colors.grey[600];
+  static var disabledColor = Colors.grey[300];
+  static var disabledColorHighlight = Colors.grey[500];
 
   ProductWidget(this._item, this._shoppingItem, this.itemStyle);
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ProductWidgetState();
   }
 }
@@ -29,14 +32,13 @@ class ProductWidgetState extends State<ProductWidget> {
   @override
   Widget build(BuildContext context) {
 
-    var isAdded = widget._shoppingItem.products
-        .any((prod) => prod.name == widget._item.name);
-
     var isAddScreenStyle = widget.itemStyle == ProductWidget.STYLE_ADDSCREEN;
 
+    var isAddedOrChecked = isAddScreenStyle ? (widget._shoppingItem.products
+        .any((prod) => prod.name == widget._item.name)) : 
+        (widget.checkBoxValue);
 
 
-    // TODO: implement build
     return InkWell(
         onTap: () {
           setState() {
@@ -47,17 +49,19 @@ class ProductWidgetState extends State<ProductWidget> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
+              color: (isAddedOrChecked && !isAddScreenStyle) ? ProductWidget.disabledColor : Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: isAddScreenStyle? 10 : 0),
                 child: Container(
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                     getTrailingWidget(isAddScreenStyle, isAdded),
+                     getTrailingWidget(isAddScreenStyle, isAddedOrChecked),
                       Container(
                         child: Text(
                           widget._item.name,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: isAddScreenStyle? 16 : 14, /*decoration: TextDecoration.lineThrough*/),
+                          style: TextStyle(fontSize: isAddScreenStyle? 16 : 14,
+                              decoration: isAddedOrChecked ? TextDecoration.lineThrough : TextDecoration.none),
                         ),
                       ),
                       Container(
@@ -66,7 +70,9 @@ class ProductWidgetState extends State<ProductWidget> {
                           child: Image.asset(
                               'assets/icons/${widget._item.categoryIcon}',
                               height: isAddScreenStyle? 30 : 25,
-                              width: isAddScreenStyle? 30 : 25))
+                              width: isAddScreenStyle? 30 : 25,
+                         // TODO trova quello giusto per scala di grigi colorBlendMode: BlendMode.multiply,
+                          color: (isAddedOrChecked && !isAddScreenStyle) ? ProductWidget.disabledColorHighlight : null))
                     ]))),
             Divider(
               height: 2,
@@ -111,7 +117,7 @@ class ProductWidgetState extends State<ProductWidget> {
                 ? Icons.remove_circle_outline
                 : Icons.add_circle_outline,
             size: 30,
-            color: isCheckedOrAdded ? Colors.red[600] : Colors.grey[600]
+            color: isCheckedOrAdded ? ProductWidget.addedProductColor : ProductWidget.removedProductColor
           ),
           onPressed: () {
             setState(() {
@@ -120,9 +126,11 @@ class ProductWidgetState extends State<ProductWidget> {
           });
     }
     else{
-      return Checkbox(value: widget.tempBooleanCheckbox, onChanged: (bool isChecked){
+      return Checkbox(value: widget.checkBoxValue,
+          activeColor: ProductWidget.disabledColorHighlight,
+          onChanged: (bool isChecked){
         setState(() {
-          widget.tempBooleanCheckbox = isChecked;
+          widget.checkBoxValue = isChecked;
         });
       });
     }

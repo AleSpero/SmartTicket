@@ -64,19 +64,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: SmartTicketApp.colorAccent,
-          child: Icon(Icons.add, color: Colors.white),
+      floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: SmartTicketApp.colorPrimary,
+          icon: Icon(Icons.add, color: Colors.white),
+          label: Text("Aggiungi", style: TextStyle(color: Colors.white)),
           onPressed: addNewItem),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
         notchMargin: 4.0,
-        color: SmartTicketApp.colorPrimary,
+        //color: SmartTicketApp.colorPrimary,
         child: Row(
           //TODO?
           children: <Widget>[
-            IconButton(
-                icon: Icon(Icons.history, color: Colors.white), onPressed: null)
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -116,6 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Expanded(
           child: Center(
             child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: itemsList.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
