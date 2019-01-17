@@ -82,5 +82,10 @@ class ShoppingItem {
     _id = id;
   }
 
+  @override
+  String toString() {
+    return 'ShoppingItem{_id: $_id, _date: $_date, _name: $_name, _notes: $_notes, _color: $_color, _cost: $_cost, _ticketsNum: $_ticketsNum, products: $products}';
+  }
+
 
 }

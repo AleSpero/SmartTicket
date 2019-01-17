@@ -9,6 +9,7 @@ import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
+import 'package:smart_ticket/widgets/productwidget.dart';
 
 class AddProductScreen extends StatefulWidget {
 
@@ -50,7 +51,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
       body: Container(
           child: Column(
             children: <Widget>[
-             Center( child: Text("${widget.currentItem.products.length}", style:  TextStyle(fontSize: 20)))
+             Center(
+                 child: ListView.builder(
+                     itemBuilder: (context, index){
+                 return ProductWidget(widget.currentItem.products[index], widget.currentItem, ProductWidget.STYLE_ADDSCREEN);
+                 },
+                   shrinkWrap: true,
+                   itemCount: widget.currentItem.products.length,
+                 )
+             )
             ],
           )),
      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

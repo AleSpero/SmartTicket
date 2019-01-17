@@ -8,6 +8,9 @@ class ProductWidget extends StatefulWidget {
 
   static const STYLE_SCANSCREEN = 0;
   static const STYLE_ADDSCREEN = 1;
+ // static const STYLE_FROMDIALOG = 2;
+
+  VoidCallback onTap;
 
   dynamic _item; //TODO REFACTORING CON HIERACY base -> Product
   ShoppingItem _shoppingItem;
@@ -20,7 +23,7 @@ class ProductWidget extends StatefulWidget {
   static var disabledColor = Colors.grey[300];
   static var disabledColorHighlight = Colors.grey[500];
 
-  ProductWidget(this._item, this._shoppingItem, this.itemStyle);
+  ProductWidget(this._item, this._shoppingItem, this.itemStyle,{this.onTap});
 
   @override
   State<StatefulWidget> createState() {
@@ -33,6 +36,8 @@ class ProductWidgetState extends State<ProductWidget> {
   Widget build(BuildContext context) {
 
     var isAddScreenStyle = widget.itemStyle == ProductWidget.STYLE_ADDSCREEN;
+
+  //  var isFromDialog = widget.itemStyle == ProductWidget.STYLE_FROMDIALOG;
 
     var isAddedOrChecked = isAddScreenStyle ? (widget._shoppingItem.products
         .any((prod) => prod.name == widget._item.name)) : 
@@ -61,7 +66,7 @@ class ProductWidgetState extends State<ProductWidget> {
                           widget._item.name,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: isAddScreenStyle? 16 : 14,
-                              decoration: isAddedOrChecked ? TextDecoration.lineThrough : TextDecoration.none),
+                              decoration: isAddedOrChecked && !isAddScreenStyle ? TextDecoration.lineThrough : TextDecoration.none),
                         ),
                       ),
                       Container(
@@ -119,11 +124,10 @@ class ProductWidgetState extends State<ProductWidget> {
             size: 30,
             color: isCheckedOrAdded ? ProductWidget.addedProductColor : ProductWidget.removedProductColor
           ),
-          onPressed: () {
-            setState(() {
-              manageProductAdd();
-            });
-          });
+          onPressed: widget.onTap
+     );
+              //manageProductAdd();
+
     }
     else{
       return Checkbox(value: widget.checkBoxValue,
@@ -131,8 +135,11 @@ class ProductWidgetState extends State<ProductWidget> {
           onChanged: (bool isChecked){
         setState(() {
           widget.checkBoxValue = isChecked;
+          widget.onTap;
         });
       });
     }
   }
+
+
 }

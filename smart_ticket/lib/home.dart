@@ -5,6 +5,7 @@ import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
+import 'package:smart_ticket/widgets/CustomBottomAppBar.dart';
 import 'package:smart_ticket/widgets/insertdialog.dart';
 import 'package:smart_ticket/widgets/shoppingitemwidget.dart';
 
@@ -64,20 +65,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: Hero(tag:"PROVA", child: FloatingActionButton.extended(
           backgroundColor: SmartTicketApp.colorPrimary,
           icon: Icon(Icons.add, color: Colors.white),
           label: Text("Aggiungi", style: TextStyle(color: Colors.white)),
           onPressed: addNewItem),
-      bottomNavigationBar: BottomAppBar(
-        notchMargin: 4.0,
-        //color: SmartTicketApp.colorPrimary,
-        child: Row(
-          //TODO?
-          children: <Widget>[
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      bottomNavigationBar: Hero(
+        tag: SmartTicketApp.HERO_TAG_BOTTOMAPPBAR,
+      child: CustomBottomAppBar(
+        color: Colors.grey[800],
+        selectedColor: SmartTicketApp.colorPrimary,
+        onTabSelected: (tabIndex){},
+        items: [
+          CustomBottomAppBarItem(icon: Icons.shopping_cart, label: "Spesa"),
+          CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo"),
+          CustomBottomAppBarItem(icon: Icons.insert_chart, label: "Budget"),
+          CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo")
+        ],
+      ),
+      )// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 

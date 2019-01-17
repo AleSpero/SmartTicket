@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_ticket/addproduct.dart';
+import 'package:smart_ticket/helpers/OcrDebugView.dart';
 import 'package:smart_ticket/home.dart';
 import 'package:smart_ticket/scan.dart';
 
@@ -19,9 +20,12 @@ class SmartTicketApp extends StatelessWidget {
 
   static var appTitle = "Smart Ticket";
 
+  static const String HERO_TAG_BOTTOMAPPBAR = "BottomApp";
+
   static const String ROUTE_HOME = "/";
   static const String ROUTE_SCAN = "/scan";
   static const String ROUTE_ADD_PRODUCT = "/add";
+  static const String ROUTE_OCR_DEBUG = "/OcrDebugView";
   static const String ST_CHANNEL = "smartTicket";
   static const String OCR_METHOD = "startOcr";
 
@@ -69,7 +73,8 @@ class SmartTicketApp extends StatelessWidget {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(title: appTitle),
         ROUTE_SCAN: (context) => ScanScreen(null, title: appTitle),
-        ROUTE_ADD_PRODUCT: (context) => AddProductScreen(null, title: appTitle)
+        ROUTE_ADD_PRODUCT: (context) => AddProductScreen(null, title: appTitle),
+        ROUTE_OCR_DEBUG: (context) => OcrDebugView(null)
       },
     );
   }

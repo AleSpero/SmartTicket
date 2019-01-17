@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/CustomShapeClipper.dart';
+import 'package:smart_ticket/helpers/OcrDebugView.dart';
 import 'package:smart_ticket/helpers/StDbHelper.dart';
-import 'package:smart_ticket/helpers/ticketutils.dart';
+import 'package:smart_ticket/helpers/TicketUtils.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/product.dart';
 import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
+import 'package:smart_ticket/widgets/CustomBottomAppBar.dart';
 import 'package:smart_ticket/widgets/productwidget.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -77,43 +79,55 @@ class _HomeScreenState extends State<ScanScreen> {
                 )),
           ),
       ])),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: SmartTicketApp.colorAccent,
-          child: Icon(Icons.search, color: Colors.white),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Hero(tag:"PROVA", child:  FloatingActionButton.extended(
+          backgroundColor: SmartTicketApp.colorPrimary,
+          icon: Icon(Icons.search, color: Colors.white),
+          label: Text("Scansiona", style: TextStyle(color: Colors.white),),
           onPressed: scanItem),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 4.0,
-        color: SmartTicketApp.colorPrimary,
-        child: Row(
-          //TODO?
-          children: <Widget>[
-            IconButton(
-                icon: Icon(Icons.history, color: Colors.white), onPressed: null)
-          ],
-        ),
       ),
-      // / This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: Hero(
+        tag: SmartTicketApp.HERO_TAG_BOTTOMAPPBAR,
+    child: CustomBottomAppBar(
+        color: Colors.grey[800],
+        selectedColor: SmartTicketApp.colorPrimary,
+        onTabSelected: (tabIndex){},
+        items: [
+          CustomBottomAppBarItem(icon: Icons.shopping_cart, label: "Spesa"),
+          CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo"),
+          CustomBottomAppBarItem(icon: Icons.insert_chart, label: "Budget"),
+          CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo")
+        ],
+      ),
+      )// / This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   void scanItem() async {
-    try {
-      //Check permission!
-      var hasPermission =
-          await SimplePermissions.checkPermission(Permission.Camera);
 
-      if (!hasPermission) {
-        //Request It
-        var permissionStatus =
-            await SimplePermissions.requestPermission(Permission.Camera);
-        debugPrint(permissionStatus.toString());
+    if(!SmartTicketApp.isAndroid){
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => OcrDebugView(widget.currentItem)
+      ));
+    }
+    else {
+      try {
+        //Check permission!
+        var hasPermission =
+        await SimplePermissions.checkPermission(Permission.Camera);
+
+        if (!hasPermission) {
+          //Request It
+          var permissionStatus =
+          await SimplePermissions.requestPermission(Permission.Camera);
+          debugPrint(permissionStatus.toString());
+        }
+
+        SmartTicketApp.plaformChannel.invokeMethod(SmartTicketApp.OCR_METHOD);
+        //TODO ios!
+      } catch (PlatformException) {
+        //TODO error
       }
-
-      SmartTicketApp.plaformChannel.invokeMethod(SmartTicketApp.OCR_METHOD);
-    } catch (PlatformException) {
-      //TODO error
     }
   }
 
@@ -197,6 +211,7 @@ class _HomeScreenState extends State<ScanScreen> {
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
     List productsList = snapshot.data as List<Product>;
+    widget.currentItem.products = productsList;
     //debugPrint('${productsList.isEmpty}');
     if (productsList.isEmpty) {
       return Center(
