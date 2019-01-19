@@ -66,7 +66,9 @@ class Product{
   @override
   int get hashCode => _name.hashCode;
 
-
+  set cost(double value) {
+    _cost = value;
+  }
 
 
 }

@@ -9,16 +9,16 @@ import 'package:smart_ticket/widgets/CustomBottomAppBar.dart';
 import 'package:smart_ticket/widgets/insertdialog.dart';
 import 'package:smart_ticket/widgets/shoppingitemwidget.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, @required this.title}) : super(key: key);
+class ShoppingScreen extends StatefulWidget {
+  ShoppingScreen({Key key, @required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _HomeScreenState createState() => new _HomeScreenState();
+  _ShoppingScreenState createState() => new _ShoppingScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ShoppingScreenState extends State<ShoppingScreen> {
   List<ShoppingItem> itemsList;
   List<ShoppingItemWidget> cardList;
 

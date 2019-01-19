@@ -7,13 +7,14 @@ import 'package:smart_ticket/helpers/productsearchdelegate.dart';
 import 'package:smart_ticket/main.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:smart_ticket/models/baseproduct.dart';
+import 'package:smart_ticket/models/product.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/scan.dart';
 import 'package:smart_ticket/widgets/productwidget.dart';
 
 class AddProductScreen extends StatefulWidget {
 
-  AddProductScreen(this.currentItem,{Key key, this.title}) : super(key: key);
+  AddProductScreen(this.currentItem, {Key key, this.title}) : super(key: key);
 
   final ShoppingItem currentItem;
   final String title;
@@ -27,9 +28,6 @@ class AddProductScreen extends StatefulWidget {
 class _AddProductScreenState extends State<AddProductScreen> {
   @override
   Widget build(BuildContext context) {
-
-    _initHintList();
-
     return new Scaffold(
       appBar: new AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -38,41 +36,48 @@ class _AddProductScreenState extends State<AddProductScreen> {
           //elevation: 0.0,
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
-              onPressed: () {
-                showSearch(
-                    context: context,
-                    delegate: ProductSearchDelegate(widget.currentItem)
-                );
-              }
+                icon: Icon(Icons.search, color: Colors.white),
+                onPressed: () {
+                  showSearch(
+                      context: context,
+                      delegate: ProductSearchDelegate(widget.currentItem)
+                  );
+                }
             )
           ]),
 
       body: Container(
           child: Column(
             children: <Widget>[
-             Center(
-                 child: ListView.builder(
-                     itemBuilder: (context, index){
-                 return ProductWidget(widget.currentItem.products[index], widget.currentItem, ProductWidget.STYLE_ADDSCREEN);
-                 },
-                   shrinkWrap: true,
-                   itemCount: widget.currentItem.products.length,
-                 )
-             )
+              Center( //TODO valuta animatedlist
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return ProductWidget(widget.currentItem.products[index],
+                          widget.currentItem, ProductWidget.STYLE_ADDSCREEN,
+                          onTap: () {
+                            _manageRemoveProduct(widget.currentItem.products[index]);
+                            setState(() {
+
+                            });
+                          });
+                    },
+                    shrinkWrap: true,
+                    itemCount: widget.currentItem.products.length,
+                  )
+              )
             ],
           )),
-     // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
           backgroundColor: SmartTicketApp.colorAccent,
           child: Icon(Icons.arrow_forward, color: Colors.white),
-          onPressed: (){
-
+          onPressed: () {
             Navigator.of(context).pop();
 
-           Navigator.of(context).push(
-             MaterialPageRoute(builder: (context) => ScanScreen(widget.currentItem))
-           );
+            Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (context) => ScanScreen(widget.currentItem))
+            );
           }),
       /*bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -89,13 +94,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  void _initHintList(){
- /*   if(widget.hintProducts.isEmpty){
-      //Init hint products list
-      StDbHelper().getAllHintProducts().then((list){
-        widget.hintProducts = list;
-      });
-    }
-  */}
+  void _manageRemoveProduct(Product product) {
+    //aggiunge o rimuove
+    //Rimuovo
+    widget.currentItem.products.remove(product);
+    StDbHelper().removeProduct(product);
+
+    debugPrint("Removed product ${product.name},"
+        " shoppingList has now ${widget.currentItem.products.length} items");
+  }
 
 }

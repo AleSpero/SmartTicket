@@ -5,10 +5,10 @@ import 'package:smart_ticket/models/baseproduct.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 
 class ProductWidget extends StatefulWidget {
-
   static const STYLE_SCANSCREEN = 0;
   static const STYLE_ADDSCREEN = 1;
- // static const STYLE_FROMDIALOG = 2;
+
+  // static const STYLE_FROMDIALOG = 2;
 
   VoidCallback onTap;
 
@@ -23,7 +23,7 @@ class ProductWidget extends StatefulWidget {
   static var disabledColor = Colors.grey[300];
   static var disabledColorHighlight = Colors.grey[500];
 
-  ProductWidget(this._item, this._shoppingItem, this.itemStyle,{this.onTap});
+  ProductWidget(this._item, this._shoppingItem, this.itemStyle, {this.onTap});
 
   @override
   State<StatefulWidget> createState() {
@@ -34,50 +34,58 @@ class ProductWidget extends StatefulWidget {
 class ProductWidgetState extends State<ProductWidget> {
   @override
   Widget build(BuildContext context) {
-
     var isAddScreenStyle = widget.itemStyle == ProductWidget.STYLE_ADDSCREEN;
 
-  //  var isFromDialog = widget.itemStyle == ProductWidget.STYLE_FROMDIALOG;
+    //  var isFromDialog = widget.itemStyle == ProductWidget.STYLE_FROMDIALOG;
 
-    var isAddedOrChecked = isAddScreenStyle ? (widget._shoppingItem.products
-        .any((prod) => prod.name == widget._item.name)) : 
-        (widget.checkBoxValue);
-
+    var isAddedOrChecked = isAddScreenStyle
+        ? (widget._shoppingItem.products
+            .any((prod) => prod.name == widget._item.name))
+        : (widget.checkBoxValue);
 
     return InkWell(
         onTap: () {
-          setState() {
-            manageProductAdd();
-          }
+          setState((){widget.checkBoxValue = !widget.checkBoxValue;
+          widget.onTap();
+          });
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              color: (isAddedOrChecked && !isAddScreenStyle) ? ProductWidget.disabledColor : Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: isAddScreenStyle? 10 : 0),
+                color: (isAddedOrChecked && !isAddScreenStyle)
+                    ? ProductWidget.disabledColor
+                    : Colors.white,
+                padding:
+                    EdgeInsets.symmetric(horizontal: isAddScreenStyle ? 10 : 0),
                 child: Container(
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                     getTrailingWidget(isAddScreenStyle, isAddedOrChecked),
+                      getTrailingWidget(isAddScreenStyle, isAddedOrChecked),
                       Container(
                         child: Text(
                           widget._item.name,
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: isAddScreenStyle? 16 : 14,
-                              decoration: isAddedOrChecked && !isAddScreenStyle ? TextDecoration.lineThrough : TextDecoration.none),
+                          style: TextStyle(
+                              fontSize: isAddScreenStyle ? 16 : 14,
+                              decoration: isAddedOrChecked && !isAddScreenStyle
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none),
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(right: isAddScreenStyle ? 0 : 9),
-                          padding: EdgeInsets.all(isAddScreenStyle? 20 : 5),
+                          margin:
+                              EdgeInsets.only(right: isAddScreenStyle ? 0 : 9),
+                          padding: EdgeInsets.all(isAddScreenStyle ? 20 : 5),
                           child: Image.asset(
                               'assets/icons/${widget._item.categoryIcon}',
-                              height: isAddScreenStyle? 30 : 25,
-                              width: isAddScreenStyle? 30 : 25,
-                         // TODO trova quello giusto per scala di grigi colorBlendMode: BlendMode.multiply,
-                          color: (isAddedOrChecked && !isAddScreenStyle) ? ProductWidget.disabledColorHighlight : null))
+                              height: isAddScreenStyle ? 30 : 25,
+                              width: isAddScreenStyle ? 30 : 25,
+                              // TODO trova quello giusto per scala di grigi colorBlendMode: BlendMode.multiply,
+                              color: (isAddedOrChecked && !isAddScreenStyle)
+                                  ? ProductWidget.disabledColorHighlight
+                                  : null))
                     ]))),
             Divider(
               height: 2,
@@ -90,7 +98,8 @@ class ProductWidgetState extends State<ProductWidget> {
     //aggiunge o rimuove
 
     //Creo product attuale
-    var product = Product.generateWithCategory(widget._item.name, widget._item.categoryIcon);
+    var product = Product.generateWithCategory(
+        widget._item.name, widget._item.categoryIcon);
 
     if (widget._shoppingItem.products.contains(product)) {
       //Rimuovo
@@ -110,36 +119,32 @@ class ProductWidgetState extends State<ProductWidget> {
     }
   }
 
-  void manageProductScan() {
-
-  }
-
-  Widget getTrailingWidget(bool displayAddBtn, bool isCheckedOrAdded){
-    if(displayAddBtn){
-     return IconButton(
+  Widget getTrailingWidget(bool displayAddBtn, bool isCheckedOrAdded) {
+    if (displayAddBtn) {
+      return IconButton(
           icon: Icon(
-            isCheckedOrAdded
-                ? Icons.remove_circle_outline
-                : Icons.add_circle_outline,
-            size: 30,
-            color: isCheckedOrAdded ? ProductWidget.addedProductColor : ProductWidget.removedProductColor
-          ),
-          onPressed: widget.onTap
-     );
-              //manageProductAdd();
+              isCheckedOrAdded
+                  ? Icons.remove_circle_outline
+                  : Icons.add_circle_outline,
+              size: 30,
+              color: isCheckedOrAdded
+                  ? ProductWidget.addedProductColor
+                  : ProductWidget.removedProductColor),
+          onPressed: () {
+            setState(widget.onTap);
+          });
+      //manageProductAdd();
 
-    }
-    else{
-      return Checkbox(value: widget.checkBoxValue,
+    } else {
+      return Checkbox(
+          value: widget.checkBoxValue,
           activeColor: ProductWidget.disabledColorHighlight,
-          onChanged: (bool isChecked){
-        setState(() {
-          widget.checkBoxValue = isChecked;
-          widget.onTap;
-        });
-      });
+          onChanged: (bool isChecked) {
+            setState(() {
+              widget.checkBoxValue = isChecked;
+              widget.onTap();
+            });
+          });
     }
   }
-
-
 }

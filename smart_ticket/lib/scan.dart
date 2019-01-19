@@ -105,7 +105,7 @@ class _HomeScreenState extends State<ScanScreen> {
 
   void scanItem() async {
 
-    if(!SmartTicketApp.isAndroid){
+    if(!SmartTicketApp.isAndroid || true){
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => OcrDebugView(widget.currentItem)
       ));
@@ -246,7 +246,8 @@ class _HomeScreenState extends State<ScanScreen> {
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.only(right: 10),
                       child: Icon(Icons.delete)),
-                      child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN)
+                      child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN,
+                       onTap: /*TODO in fondo alla lista*/null)
                     );
 
                   })

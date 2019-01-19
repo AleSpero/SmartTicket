@@ -84,6 +84,11 @@ class StDbHelper {
     await dbClient.insert(TABLE_PRODUCT, product.toMap());
   }
 
+  void updateProduct(Product product) async {
+    var dbClient = await db;
+    await dbClient.update(TABLE_PRODUCT, product.toMap(), where: "id = ?", whereArgs: [product.id]);
+  }
+
   Future<int> removeProduct(Product product) async {
     //TODO implement me
     var dbClient = await db;

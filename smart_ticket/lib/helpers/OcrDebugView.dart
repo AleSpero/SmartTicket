@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:smart_ticket/helpers/StDbHelper.dart';
 import 'package:smart_ticket/models/product.dart';
 import 'package:smart_ticket/models/shoppingItem.dart';
 import 'package:smart_ticket/widgets/productwidget.dart';
 
 class OcrDebugView extends StatefulWidget {
-
   OcrDebugView(this.item);
 
   ShoppingItem item;
+  String productPrice = "0";
+  TextEditingController textController = TextEditingController();
 
   @override
   State<StatefulWidget> createState() {
@@ -25,14 +27,19 @@ class OcrDebugViewState extends State<OcrDebugView> {
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Center(
               child: TextField(
-                key: Key("priceTextInput"), //TODO string
+            onChanged: (text){
+              setState(() {
+                widget.productPrice = text;
+                debugPrint(widget.productPrice);
+              });
+            },
             style: TextStyle(fontSize: 30, color: Colors.black),
             keyboardType:
                 TextInputType.numberWithOptions(signed: false, decimal: true),
-                decoration: InputDecoration(hintText: "23,45€"),
+            decoration: InputDecoration(hintText: "23,45€"),
           ))),
       floatingActionButton: FloatingActionButton(
-          onPressed: _validatePrice,
+          onPressed: (){_validatePrice(widget.productPrice);},
           child: Icon(
             Icons.check,
             color: Colors.white,
@@ -40,8 +47,7 @@ class OcrDebugViewState extends State<OcrDebugView> {
     );
   }
 
-  void _validatePrice(){
-
+  void _validatePrice(String newPrice) {
     debugPrint(widget.item.toString());
 
     showDialog(
@@ -55,30 +61,34 @@ class OcrDebugViewState extends State<OcrDebugView> {
               title: new Text("Seleziona l'elemento scansionato"),
               content: Container(
                 width: 300,
-                  height: 300, //TODO hmm check for small displays
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (context, index){
-                return ProductWidget(widget.item.products[index], widget.item, ProductWidget.STYLE_SCANSCREEN,
-                onTap: checkProduct);
-                //TODO aggiungi qui callback on checked?
-              },
-              itemCount: widget.item.products.length),
-              )
-          );
+                height: 300, //TODO hmm check for small displays
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return ProductWidget(
+                          widget.item.products[index],
+                          widget.item,
+                          ProductWidget.STYLE_SCANSCREEN, onTap: () {
+                        checkProduct(widget.item.products[index],
+                        newPrice);
+                      });
+                      //TODO aggiungi qui callback on checked?
+                    },
+                    itemCount: widget.item.products.length),
+              ));
         });
   }
 
-void checkProduct(){
+  void checkProduct(Product product, String price) {
     //Pop dialog
     //Ora dovrebbe essere un product
     //TODO query db: PRima aggiorna product con costo e checked state a 1, poi salvalo sul db e poppa
-   // Product product = _item as Product;
+    debugPrint('$price prezzo');
+    product.cost = double.parse(price);
 
-    //product.cost =
-
+    StDbHelper().updateProduct(product);
+    debugPrint("Ci sono");
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
-
 }
