@@ -106,7 +106,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           "assets/icons/settings.png",
                           width: 60,
                           height: 60,
-                        )))
+                        ),
+                    routeName: SmartTicketApp.ROUTE_SETTINGS,))
               ],
             )
         )]),

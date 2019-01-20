@@ -80,15 +80,15 @@ class OcrDebugViewState extends State<OcrDebugView> {
   }
 
   void checkProduct(Product product, String price) {
-    //Pop dialog
     //Ora dovrebbe essere un product
-    //TODO query db: PRima aggiorna product con costo e checked state a 1, poi salvalo sul db e poppa
     debugPrint('$price prezzo');
     product.cost = double.parse(price);
 
+    //TODO chiedi quanti prodotti ci sono (nel dialog) magari con bottoncini per aumentare/diminuire
     StDbHelper().updateProduct(product);
     debugPrint("Ci sono");
     Navigator.of(context).pop();
-    Navigator.of(context).pop();
+    //Id del prodotto poppato
+    Navigator.of(context).pop(product.id);
   }
 }

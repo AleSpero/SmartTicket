@@ -27,21 +27,34 @@ class ScanScreen extends StatefulWidget {
   // always marked "final".
 
   final String title;
-  ShoppingItem currentItem; //TODO temp
+  ShoppingItem currentItem;//TODO temp
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
 }
 
 class _HomeScreenState extends State<ScanScreen> {
+
+  double priceDifference= 0;
+  int ticketsNum = 0;
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+    //TODO rivedi bene sta roba
+
+    TicketUtils.calculateDifference(widget.currentItem.cost).then((diff){
+      priceDifference = diff;
+      if(priceDifference == 0)
+      setState((){});
+    });
+
+    TicketUtils.getTicketPrice().then((price){
+      ticketsNum = (widget.currentItem.cost/price).round();
+      if(ticketsNum == 0)
+        setState((){});
+    });
+
     return new Scaffold(
       appBar: new AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -106,9 +119,14 @@ class _HomeScreenState extends State<ScanScreen> {
   void scanItem() async {
 
     if(!SmartTicketApp.isAndroid || true){
-      Navigator.of(context).push(MaterialPageRoute(
+
+
+      int selectedProductId = await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => OcrDebugView(widget.currentItem)
       ));
+
+      //Condizione if prezzo > 0 potrebbe essere debole
+
     }
     else {
       try {
@@ -132,6 +150,9 @@ class _HomeScreenState extends State<ScanScreen> {
   }
 
   Widget createTopCard() {
+
+    //TicketUtils.calculateNumTickets
+
     return Stack(
       children: <Widget>[
         ClipPath(
@@ -165,12 +186,11 @@ class _HomeScreenState extends State<ScanScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                   ),
                   Text(
-                    "Servono ${widget.currentItem.ticketsNum} Ticket",
+                    "Servono $ticketsNum Ticket",
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    "E una differenza di ${TicketUtils.calculateDifference(widget.currentItem.cost,
-                        widget.currentItem.ticketsNum).toStringAsFixed(2)}€",
+                    "E una differenza di ${priceDifference.toStringAsFixed(2)}€",
                     //TODO valuta metodo in ticketutils
                     //style: TextStyle(fontSize: ),
                   )

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_ticket/HomeScreen.dart';
+import 'package:smart_ticket/SettingsScreen.dart';
 import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/OcrDebugView.dart';
 import 'package:smart_ticket/ShoppingScreen.dart';
@@ -25,11 +26,14 @@ class SmartTicketApp extends StatelessWidget {
 
   static const String ROUTE_SHOP = "/shop";
   static const String ROUTE_HOME = "/";
+  static const String ROUTE_SETTINGS = "/settings";
   static const String ROUTE_SCAN = "/scan";
   static const String ROUTE_ADD_PRODUCT = "/add";
   static const String ROUTE_OCR_DEBUG = "/OcrDebugView";
   static const String ST_CHANNEL = "smartTicket";
   static const String OCR_METHOD = "startOcr";
+
+  static const String PREFERENCE_TICKET_PRICE = "ticketPrice";
 
   static var primarySwatch = MaterialColor(0xFFF57C00, // colorPrimary.value,
       {
@@ -66,6 +70,7 @@ class SmartTicketApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return new MaterialApp(
       title: appTitle,
       theme: //TODO theme for ios
@@ -74,6 +79,7 @@ class SmartTicketApp extends StatelessWidget {
       routes: {
         //che è sto context tra parentesi?
         ROUTE_HOME: (context) => HomeScreen(),
+        ROUTE_SETTINGS: (context) => SettingsScreen(),
         ROUTE_SHOP: (context) => ShoppingScreen(title: appTitle),
         ROUTE_SCAN: (context) => ScanScreen(null, title: appTitle),
         ROUTE_ADD_PRODUCT: (context) => AddProductScreen(null, title: appTitle),

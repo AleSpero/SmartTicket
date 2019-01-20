@@ -108,10 +108,21 @@ class StDbHelper {
   Future<List<ShoppingItem>> getAllItems() async {
     var dbClient = await db;
     var tempResult = await dbClient.query(TABLE_SHOPPING_ITEM);
+    var productsList = await dbClient.query(TABLE_PRODUCT);
     var result = List<ShoppingItem>();
 
     for(Map map in tempResult){
-      result.add(ShoppingItem.fromMap(map));
+
+      ShoppingItem tempShoppingItem = ShoppingItem.fromMap(map);
+
+      for(Map prodMap in productsList){
+        Product tempProduct = Product.fromMap(prodMap);
+
+        if(tempProduct.shoppingItemId == tempShoppingItem.id)
+          tempShoppingItem.products.add(tempProduct);
+      }
+
+      result.add(tempShoppingItem);
     }
 
     return result;

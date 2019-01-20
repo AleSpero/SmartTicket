@@ -21,6 +21,8 @@ class Product{
   double get cost => _cost;
   int get id => _id;
 
+  get shoppingItemId => _shoppingItemId;
+
 
   set shoppingItemId(int value) {
     _shoppingItemId = value;
