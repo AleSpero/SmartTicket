@@ -86,7 +86,6 @@ class OcrDebugViewState extends State<OcrDebugView> {
 
     //TODO chiedi quanti prodotti ci sono (nel dialog) magari con bottoncini per aumentare/diminuire
     StDbHelper().updateProduct(product);
-    debugPrint("Ci sono");
     Navigator.of(context).pop();
     //Id del prodotto poppato
     Navigator.of(context).pop(product.id);

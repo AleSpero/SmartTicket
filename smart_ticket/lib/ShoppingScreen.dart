@@ -81,7 +81,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
           CustomBottomAppBarItem(icon: Icons.shopping_cart, label: "Spesa"),
           CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo"),
           CustomBottomAppBarItem(icon: Icons.insert_chart, label: "Budget"),
-          CustomBottomAppBarItem(icon: Icons.person_outline, label: "Profilo")
+          CustomBottomAppBarItem(icon: Icons.settings, label: "Impostazioni")
         ],
       ),
       )// This trailing comma makes auto-formatting nicer for build methods.

@@ -43,17 +43,17 @@ class _HomeScreenState extends State<ScanScreen> {
 
     //TODO rivedi bene sta roba
 
-    TicketUtils.calculateDifference(widget.currentItem.cost).then((diff){
+    /*TicketUtils.calculateDifferenceAsync(widget.currentItem.cost).then((diff){
       priceDifference = diff;
       if(priceDifference == 0)
       setState((){});
-    });
+    });*/
 
-    TicketUtils.getTicketPrice().then((price){
+    /*TicketUtils.getTicketPrice().then((price){
       ticketsNum = (widget.currentItem.cost/price).round();
       if(ticketsNum == 0)
         setState((){});
-    });
+    });*/
 
     return new Scaffold(
       appBar: new AppBar(
@@ -186,11 +186,11 @@ class _HomeScreenState extends State<ScanScreen> {
                     margin: EdgeInsets.only(bottom: 10),
                   ),
                   Text(
-                    "Servono $ticketsNum Ticket",
+                    "Servono ${TicketUtils.calculateNumberOfTickets(widget.currentItem.cost, SmartTicketApp.ticketPrice)} Ticket",
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
-                    "E una differenza di ${priceDifference.toStringAsFixed(2)}€",
+                    "E una differenza di ${TicketUtils.calculateDifference(widget.currentItem.cost).toStringAsFixed(2)}€",
                     //TODO valuta metodo in ticketutils
                     //style: TextStyle(fontSize: ),
                   )
@@ -230,7 +230,10 @@ class _HomeScreenState extends State<ScanScreen> {
   }
 
   Widget createListView(BuildContext context, AsyncSnapshot snapshot) {
-    List productsList = snapshot.data as List<Product>;
+    List<Product> productsList = snapshot.data as List<Product>;
+
+    //sorto per checkato/non checkato (prezzo /non prezzo)
+    productsList.sort((a,b) => a.cost.toInt() - b.cost.toInt());
     widget.currentItem.products = productsList;
     //debugPrint('${productsList.isEmpty}');
     if (productsList.isEmpty) {

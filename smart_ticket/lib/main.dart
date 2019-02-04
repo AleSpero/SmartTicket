@@ -6,6 +6,7 @@ import 'package:smart_ticket/SettingsScreen.dart';
 import 'package:smart_ticket/addproduct.dart';
 import 'package:smart_ticket/helpers/OcrDebugView.dart';
 import 'package:smart_ticket/ShoppingScreen.dart';
+import 'package:smart_ticket/helpers/TicketUtils.dart';
 import 'package:smart_ticket/scan.dart';
 
 void main() => runApp(new SmartTicketApp());
@@ -18,10 +19,8 @@ class SmartTicketApp extends StatelessWidget {
   static var colorAccent = Colors.orange[900];
   static var greyBkg = Colors.grey[50];
 
-  static var defaultCardElevation = 4.0;
-
-  static var appTitle = "Smart Ticket";
-
+  static const defaultCardElevation = 4.0;
+  static const appTitle = "Smart Ticket";
   static const String HERO_TAG_BOTTOMAPPBAR = "BottomApp";
 
   static const String ROUTE_SHOP = "/shop";
@@ -32,8 +31,11 @@ class SmartTicketApp extends StatelessWidget {
   static const String ROUTE_OCR_DEBUG = "/OcrDebugView";
   static const String ST_CHANNEL = "smartTicket";
   static const String OCR_METHOD = "startOcr";
-
   static const String PREFERENCE_TICKET_PRICE = "ticketPrice";
+
+  //region preference
+
+  static var ticketPrice = 0.0;
 
   static var primarySwatch = MaterialColor(0xFFF57C00, // colorPrimary.value,
       {
@@ -70,6 +72,8 @@ class SmartTicketApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    TicketUtils.getTicketPrice().then((price) => ticketPrice = price);
 
     return new MaterialApp(
       title: appTitle,

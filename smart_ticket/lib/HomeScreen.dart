@@ -10,7 +10,7 @@ class HomeScreen extends StatefulWidget {
 
   final String title;
 
-  static final CARD_ELEVATION = 6.0;
+  static const CARD_ELEVATION = 6.0;
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -21,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
+          title: Text("Ciao, Alessandro!"),
           elevation: 0,
           /*actions: <Widget>[
             PopupMenuButton(
@@ -36,11 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipPath(
               clipper: CustomShapeClipper(),
               child: Container(
-                height: 550,
+                height: 450,
                 decoration: BoxDecoration(color: SmartTicketApp.colorPrimary),
               ),
             ),
-            Container(
+            /*Container(
                 padding:
                     EdgeInsets.only(left: 20, right: 10),
                 child: Row(
@@ -60,9 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   ],
-                )),
+                )),*/
         Container(
-            margin: EdgeInsets.only(top: 100),
+            margin: EdgeInsets.only(top: 50),
             child:
         GridView.count(
           shrinkWrap: true,

@@ -36,9 +36,8 @@ class ProductWidgetState extends State<ProductWidget> {
   Widget build(BuildContext context) {
     var isAddScreenStyle = widget.itemStyle == ProductWidget.STYLE_ADDSCREEN;
 
-    //  var isFromDialog = widget.itemStyle == ProductWidget.STYLE_FROMDIALOG;
-
-    if(widget._item.cost > 0) widget.checkBoxValue = true;
+    if(widget._item.runtimeType == Product && widget._item.cost > 0)
+        widget.checkBoxValue = true;
 
     var isAddedOrChecked = isAddScreenStyle
         ? (widget._shoppingItem.products
