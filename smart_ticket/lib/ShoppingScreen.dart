@@ -20,7 +20,7 @@ class ShoppingScreen extends StatefulWidget {
 
 class _ShoppingScreenState extends State<ShoppingScreen> {
   List<ShoppingItem> itemsList;
-  List<ShoppingItemWidget> cardList;
+  List<Dismissible> cardList = List<Dismissible>();
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,8 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                 physics: BouncingScrollPhysics(),
                 itemCount: itemsList.length,
                 itemBuilder: (context, index) {
-                  return Dismissible(
+
+                    var currentCard = Dismissible(
                       key: Key('${index.hashCode}'),
                       direction: DismissDirection.endToStart,
                       onDismissed: (direction) {
@@ -132,6 +133,10 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
                             removeItem(itemsList[index], index, context));
                       },
                       child: ShoppingItemWidget(itemsList[index]));
+                    cardList.add(currentCard);
+
+                    return currentCard;
+
                 }),
           ));
     }
@@ -260,6 +265,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
 
     itemsList.remove(item);
     StDbHelper().removeShoppingItem(item);
+    cardList.removeAt(index);
 
     //Mostro snackbar
     Scaffold.of(scaffoldContext).showSnackBar(

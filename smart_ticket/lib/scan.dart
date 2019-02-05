@@ -28,6 +28,7 @@ class ScanScreen extends StatefulWidget {
 
   final String title;
   ShoppingItem currentItem;//TODO temp
+  List<Dismissible> productsWidgetList = List<Dismissible>();
 
   @override
   _HomeScreenState createState() => new _HomeScreenState();
@@ -258,20 +259,27 @@ class _HomeScreenState extends State<ScanScreen> {
                     //TODO refactoring model object db pls (product widget prende un baseproduct,
                     //che può essere sia normale che il product che aggiungo effettivamente))
 
-                    return Dismissible(
-                     key: Key('${index.hashCode}'),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) {
-                       //TODO remove per bene
-                        productsList.removeAt(index);
-                      }, //TODO scroll smooth physics coso
-                      background: Container(color: Colors.red[600],
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 10),
-                      child: Icon(Icons.delete)),
-                      child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN,
-                       onTap: /*TODO in fondo alla lista*/null)
+                    var productCard =  Dismissible(
+                        key: Key('${index.hashCode}'),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                            var product = productsList.removeAt(index);
+                            StDbHelper().removeProduct(product);
+                          setState((){
+                            widget.productsWidgetList.removeAt(index);
+                          });
+                        }, //TODO scroll smooth physics coso
+                        background: Container(color: Colors.red[600],
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.delete)),
+                        child: ProductWidget(productsList[index], widget.currentItem, ProductWidget.STYLE_SCANSCREEN,
+                            onTap: /*TODO in fondo alla lista*/null)
                     );
+
+                    widget.productsWidgetList.add(productCard);
+
+                    return productCard;
 
                   })
       );
